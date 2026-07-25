@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sarifle Portal & AI Assistant</title>
+
+  <!-- Firebase Legacy CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <!-- Sheet & PDF Export Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f4f6f8;
+      --dark: #1e293b;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg);
+    }
+
+    /* Dashboard Layout */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    #sidebar {
+      width: 230px;
+      background-color: var(--dark);
+      color: #fff;
+      padding: 20px 15px;
+    }
+    .nav-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: transparent;
+      color: #cbd5e1;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .nav-btn:hover, .nav-btn.active { background-color: #334155; color: #fff; font-weight: bold; }
+
+    #main-content {
+      flex: 1;
+      padding: 25px;
+      overflow-x: auto;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    /* Table Grid Standard */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table.data-table th, table.data-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      font-size: 14px;
+    }
+    table.data-table th { background-color: #f1f5f9; color: #475569; }
+    .badge-buy { background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+    .badge-sell { background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+
+    /* AI Chat Widget */
+    .chat-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #f8fafc;
+      margin-bottom: 10px;
+    }
+    .chat-msg {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      max-width: 80%;
+      font-size: 14px;
+    }
+    .user-msg { background: #dbeafe; color: #1e40af; margin-left: auto; text-align: right; }
+    .ai-msg { background: #e2e8f0; color: #0f172a; }
+
+    .primary-btn {
+      padding: 8px 16px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+      <h3 style="margin-top:0;">📊 Sarifle System</h3>
+      <button class="nav-btn active" id="btn-sarifka" onclick="showSection('sarifka')">📑 Qaybta Sarifka</button>
+      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">🤖 Customer Rates & AI</button>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div id="main-content">
+      
+      <!-- VIEW 1: QAYBTA SARIFKA ADMIN -->
+      <div id="sec-sarifka">
+        <h2>💱 Sarifle Management System</h2>
+        <div class="card">
+          <form id="entry-form" style="display:flex; gap:10px; margin-bottom:15px;" onsubmit="handleAddRow(event)">
+            <input type="text" id="custName" placeholder="Magaca Macmiilka" required style="padding:8px; flex:1;">
+            <select id="transType" style="padding:8px;">
+              <option value="BUY">BUY (Iibso USD)</option>
+              <option value="SELL">SELL (Iibi USD)</option>
+            </select>
+            <input type="number" id="amountUSD" placeholder="Lacagta ($ USD)" required style="padding:8px; flex:1;">
+            <input type="number" id="exRate" placeholder="Rate (e.g. 8500)" style="padding:8px; flex:1;">
+            <button type="submit" class="primary-btn">+ Ku dar Row</button>
+          </form>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Macmiilka</th>
+                <th>Nooca</th>
+                <th>USD ($)</th>
+                <th>Rate</th>
+                <th>Total (Local)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="sheet-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VIEW 2: CUSTOMER PORTAL & AI BOT -->
+      <div id="sec-customer-portal" style="display: none;">
+        <h2>🤖 Customer View & AI Assistant</h2>
+        <div class="card" style="background: #eff6ff; border-left: 4px solid var(--primary);">
+          <h3>📈 Qiimaha Sarifka ee Maanta (Live Rates)</h3>
+          <p><strong>1 USD ($) = <span id="live-rate-display">8,500</span> SLSH</strong></p>
+        </div>
+
+        <div class="card">
+          <h3>💬 Caawiyaha AI (Exchange Bot)</h3>
+          <div class="chat-box" id="chat-box">
+            <div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha AI ee Sariflaha. Wax igu saabsan qiimaha sarifka ama xisaabinta lacagta weydii!</div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="user-input" placeholder="Qor su'aal (e.g. 100$ intee iga siinaysaa?)" style="flex:1; padding: 8px; border:1px solid #cbd5e1; border-radius:4px;">
+            <button onclick="sendAIMessage()" class="primary-btn">Dir Su'aasha</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Realtime Database Configuration
+    const firebaseConfig = {
+      databaseURL: "https://safirle-default-rtdb.firebaseio.com/"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let currentLiveRate = 8500;
+
+    // Load Live Realtime Data
+    db.ref("transactions").on("value", (snapshot) => {
+      const tbody = document.getElementById("sheet-body");
+      tbody.innerHTML = "";
+      
+      const data = snapshot.val();
+      if (data) {
+        let index = 1;
+        Object.keys(data).forEach((key) => {
+          const item = data[key];
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${index++}</td>
+            <td><strong>${item.customerName}</strong></td>
+            <td><span class="${item.type === 'BUY' ? 'badge-buy' : 'badge-sell'}">${item.type}</span></td>
+            <td>$${Number(item.amountUSD).toLocaleString()}</td>
+            <td>${Number(item.exchangeRate).toLocaleString()}</td>
+            <td><strong>${Number(item.totalLocal).toLocaleString()}</strong></td>
+            <td><button onclick="deleteRow('${key}')" style="color:red; border:none; background:none; cursor:pointer;">🗑️ Delete</button></td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+    });
+
+    // Add Row to Realtime Database
+    function handleAddRow(e) {
+      e.preventDefault();
+      const name = document.getElementById("custName").value;
+      const type = document.getElementById("transType").value;
+      const usd = Number(document.getElementById("amountUSD").value);
+      const rate = Number(document.getElementById("exRate").value) || currentLiveRate;
+
+      db.ref("transactions").push({
+        customerName: name,
+        type: type,
+        amountUSD: usd,
+        exchangeRate: rate,
+        totalLocal: usd * rate,
+        createdAt: Date.now()
+      });
+
+      document.getElementById("entry-form").reset();
+    }
+
+    function deleteRow(key) {
+      if (confirm("Ma ziidayaa in aad tirto safkan?")) {
+        db.ref("transactions/" + key).remove();
+      }
+    }
+
+    function showSection(secName) {
+      document.getElementById('sec-sarifka').style.display = 'none';
+      document.getElementById('sec-customer-portal').style.display = 'none';
+
+      document.getElementById('btn-sarifka').classList.remove('active');
+      document.getElementById('btn-customer-portal').classList.remove('active');
+
+      document.getElementById('sec-' + secName).style.display = 'block';
+      document.getElementById('btn-' + secName).classList.add('active');
+    }
+
+    // AI Chat Bot Engine
+    function sendAIMessage() {
+      const inputEl = document.getElementById('user-input');
+      const chatBox = document.getElementById('chat-box');
+      const text = inputEl.value.trim();
+
+      if (!text) return;
+
+      chatBox.innerHTML += `<div class="chat-msg user-msg">${text}</div>`;
+      inputEl.value = '';
+
+      setTimeout(() => {
+        let aiResponse = "Waan ka xumahay, su'aashaada si buuxda ma u fahmin. Waxad igu weydiin kartaa qiimaha sarifka ama xisaabinta USD.";
+        const lowerText = text.toLowerCase();
+        
+        if (lowerText.includes('rate') || lowerText.includes('qiimo') || lowerText.includes('maanta')) {
+          aiResponse = `Qiimaha sarifka ee maanta waa $1 USD = ${currentLiveRate.toLocaleString()} SLSH.`;
+        } else if (lowerText.includes('$') || lowerText.includes('dollar') || lowerText.includes('usd')) {
+          const numbers = text.match(/\d+/);
+          if (numbers) {
+            const amount = parseInt(numbers[0]);
+            const total = amount * currentLiveRate;
+            aiResponse = `$${amount} USD marka loo sarifo SLSH waxay ku noqonaysaa ${total.toLocaleString()} SLSH!`;
+          } else {
+            aiResponse = "Fadlan qor tirada dollar-ka aad rabto inaan ku xisaabiyo.";
+          }
+        }
+
+        chatBox.innerHTML += `<div class="chat-msg ai-msg">${aiResponse}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+    }
+  </script>
+</body>
+</html>
