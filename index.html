@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sarifle Portal & AI Assistant</title>
+  <title>Sarifle Portal & Smart AI Assistant</title>
 
   <!-- Firebase Legacy CDN -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-  <!-- Sheet & PDF Export Libraries -->
+  <!-- Export Sheet & PDF Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
@@ -17,100 +17,168 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #f4f6f8;
+      --bg: #f8fafc;
       --dark: #1e293b;
     }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: var(--bg);
+      color: #334155;
     }
 
-    /* Dashboard Layout */
+    /* Mobile Header & Toggle */
+    .top-navbar {
+      background: var(--dark);
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .toggle-btn {
+      background: #334155;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* App Layout */
     .app-layout {
       display: flex;
-      min-height: 100vh;
+      min-height: calc(100vh - 50px);
+      position: relative;
     }
+
+    /* Responsive Sidebar */
     #sidebar {
-      width: 230px;
+      width: 250px;
       background-color: var(--dark);
       color: #fff;
       padding: 20px 15px;
+      transition: all 0.3s ease;
     }
+    #sidebar.hide {
+      display: none;
+    }
+
     .nav-btn {
       width: 100%;
-      padding: 10px;
-      margin-top: 10px;
+      padding: 12px;
+      margin-top: 8px;
       background: transparent;
       color: #cbd5e1;
       border: none;
       text-align: left;
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 6px;
+      font-size: 15px;
     }
-    .nav-btn:hover, .nav-btn.active { background-color: #334155; color: #fff; font-weight: bold; }
+    .nav-btn:hover, .nav-btn.active {
+      background-color: var(--primary);
+      color: #fff;
+      font-weight: bold;
+    }
 
     #main-content {
       flex: 1;
-      padding: 25px;
+      padding: 20px;
+      width: 100%;
       overflow-x: auto;
     }
+
     .card {
       background: #fff;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
       margin-bottom: 20px;
     }
 
-    /* Table Grid Standard */
+    /* Inputs & Buttons Responsive Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .form-grid input, .form-grid select {
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .export-btns {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    /* Data Table Style */
+    .table-container {
+      overflow-x: auto;
+    }
     table.data-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
     }
     table.data-table th, table.data-table td {
-      padding: 12px;
+      padding: 12px 10px;
       border-bottom: 1px solid #e2e8f0;
       text-align: left;
       font-size: 14px;
     }
     table.data-table th { background-color: #f1f5f9; color: #475569; }
-    .badge-buy { background: #dcfce7; color: #166534; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
-    .badge-sell { background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 4px; font-size: 12px; }
+    .badge-buy { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+    .badge-sell { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
 
-    /* AI Chat Widget */
+    /* AI Chat Engine Widget */
     .chat-box {
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      height: 250px;
+      height: 320px;
       overflow-y: auto;
-      padding: 10px;
+      padding: 15px;
       background: #f8fafc;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .chat-msg {
-      margin: 8px 0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      max-width: 80%;
+      margin: 10px 0;
+      padding: 10px 14px;
+      border-radius: 8px;
+      max-width: 85%;
       font-size: 14px;
+      line-height: 1.4;
     }
     .user-msg { background: #dbeafe; color: #1e40af; margin-left: auto; text-align: right; }
-    .ai-msg { background: #e2e8f0; color: #0f172a; }
+    .ai-msg { background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; }
 
-    .primary-btn {
-      padding: 8px 16px;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
+    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .btn-success { background-color: #16a34a; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+    .btn-danger { background-color: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        position: absolute;
+        z-index: 1000;
+        height: 100%;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- TOP NAVBAR MOBILE TOGGLE -->
+  <div class="top-navbar">
+    <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
+    <h3 style="margin:0;">📊 Sarifle Portal</h3>
+  </div>
 
   <div class="app-layout">
     
@@ -126,52 +194,75 @@
       
       <!-- VIEW 1: QAYBTA SARIFKA ADMIN -->
       <div id="sec-sarifka">
-        <h2>💱 Sarifle Management System</h2>
+        <h2>💱 Sarifle Management System (ETB / USD)</h2>
+        
+        <!-- ADMIN RATE SETTING CARD -->
+        <div class="card" style="background: #f0fdf4; border-left: 5px solid #16a34a;">
+          <h3 style="margin-top:0; color:#166534;">⚙️ Maamul Qiimaha Sarifka ee Maanta (Admin Rate Control)</h3>
+          <p style="font-size:14px; margin-bottom:10px;">Geli qiimaha aad maanta ku sarifayso si AI-gu si toos ah macmiilka ugu sheego:</p>
+          <div style="display:flex; gap:10px; max-width:400px;">
+            <input type="number" id="adminTodayRate" placeholder="Geli Rate-ka Maanta (e.g. 183)" step="any" style="padding:8px; flex:1; border:1px solid #cbd5e1; border-radius:6px;">
+            <button onclick="updateTodayRate()" class="btn-success">💾 Keydi Rate-ka</button>
+          </div>
+        </div>
+
         <div class="card">
-          <form id="entry-form" style="display:flex; gap:10px; margin-bottom:15px;" onsubmit="handleAddRow(event)">
-            <input type="text" id="custName" placeholder="Magaca Macmiilka" required style="padding:8px; flex:1;">
-            <select id="transType" style="padding:8px;">
-              <option value="BUY">BUY (Iibso USD)</option>
-              <option value="SELL">SELL (Iibi USD)</option>
-            </select>
-            <input type="number" id="amountUSD" placeholder="Lacagta ($ USD)" required style="padding:8px; flex:1;">
-            <input type="number" id="exRate" placeholder="Rate (e.g. 8500)" style="padding:8px; flex:1;">
-            <button type="submit" class="primary-btn">+ Ku dar Row</button>
+          <form id="entry-form" onsubmit="handleAddRow(event)">
+            <div class="form-grid">
+              <input type="text" id="custName" placeholder="Magaca Macmiilka" required>
+              <select id="transType">
+                <option value="BUY">BUY (Iibso USD)</option>
+                <option value="SELL">SELL (Iibi USD)</option>
+              </select>
+              <input type="number" id="amountUSD" placeholder="Lacagta ($ USD)" step="any" required>
+              <input type="number" id="exRate" placeholder="Rate ETB (Auto/Custom)" step="any">
+              <button type="submit" class="btn-primary">+ Ku dar Row</button>
+            </div>
           </form>
 
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Macmiilka</th>
-                <th>Nooca</th>
-                <th>USD ($)</th>
-                <th>Rate</th>
-                <th>Total (Local)</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="sheet-body"></tbody>
-          </table>
+          <!-- EXPORT SECTION BUTTONS -->
+          <div class="export-btns">
+            <button class="btn-success" onclick="exportToExcel()">📥 Soo rogal Excel (.xlsx)</button>
+            <button class="btn-danger" onclick="exportToPDF()">📄 Soo rogal PDF Document</button>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="sarifka-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Macmiilka</th>
+                  <th>Nooca</th>
+                  <th>USD ($)</th>
+                  <th>Rate (ETB)</th>
+                  <th>Total (ETB)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="sheet-body"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
       <!-- VIEW 2: CUSTOMER PORTAL & AI BOT -->
       <div id="sec-customer-portal" style="display: none;">
-        <h2>🤖 Customer View & AI Assistant</h2>
-        <div class="card" style="background: #eff6ff; border-left: 4px solid var(--primary);">
-          <h3>📈 Qiimaha Sarifka ee Maanta (Live Rates)</h3>
-          <p><strong>1 USD ($) = <span id="live-rate-display">8,500</span> SLSH</strong></p>
+        <h2>🤖 Live ETB Exchange & AI Assistant</h2>
+        
+        <div class="card" style="background: #eff6ff; border-left: 5px solid var(--primary);">
+          <h3>📈 Qiimaha Sarifka ee Maanta (Set by Admin)</h3>
+          <p style="font-size: 18px;"><strong>1 USD ($) = <span id="live-rate-display" style="color:var(--primary); font-size:22px;">8500</span> ETB</strong></p>
+          <small style="color:#64748b;">*Qiimahan waxaa toos u cusboonaysiiyay Sariflaha maanta.*</small>
         </div>
 
         <div class="card">
-          <h3>💬 Caawiyaha AI (Exchange Bot)</h3>
+          <h3>💬 Caawiyaha AI (Ethiopian Birr & USD Assistant)</h3>
           <div class="chat-box" id="chat-box">
-            <div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha AI ee Sariflaha. Wax igu saabsan qiimaha sarifka ama xisaabinta lacagta weydii!</div>
+            <div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha AI ee Sariflaha ETB/USD. Maxaan ku caawinaa maanta? Waad i weydiin kartaa qiimaha sarifka maanta ama xisaabinta lacagaha.</div>
           </div>
           <div style="display: flex; gap: 10px;">
-            <input type="text" id="user-input" placeholder="Qor su'aal (e.g. 100$ intee iga siinaysaa?)" style="flex:1; padding: 8px; border:1px solid #cbd5e1; border-radius:4px;">
-            <button onclick="sendAIMessage()" class="primary-btn">Dir Su'aasha</button>
+            <input type="text" id="user-input" placeholder="Qor su'aashaada (e.g. 100$ intee weeye maanta?)" style="flex:1; padding: 10px; border:1px solid #cbd5e1; border-radius:6px;" onkeypress="if(event.key==='Enter') sendAIMessage()">
+            <button onclick="sendAIMessage()" class="btn-primary">Dir Su'aasha</button>
           </div>
         </div>
       </div>
@@ -188,9 +279,37 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentLiveRate = 8500;
+    let currentAdminRate = 183.00; // Default Initial Rate
 
-    // Load Live Realtime Data
+    // 1. Sync Active Admin Rate from Firebase
+    db.ref("settings/todayRate").on("value", (snapshot) => {
+      const val = snapshot.val();
+      if (val) {
+        currentAdminRate = parseFloat(val);
+        document.getElementById('live-rate-display').innerText = currentAdminRate;
+        document.getElementById('adminTodayRate').value = currentAdminRate;
+      }
+    });
+
+    // 2. Function to Update Rate by Admin
+    function updateTodayRate() {
+      const rateVal = parseFloat(document.getElementById('adminTodayRate').value);
+      if (rateVal && rateVal > 0) {
+        db.ref("settings/todayRate").set(rateVal)
+          .then(() => alert("Rate-ka maanta si guul leh ayaa loo cusboonaysiiyay!"))
+          .catch(err => alert("Cilad ayaa dhacday: " + err.message));
+      } else {
+        alert("Fadlan geli Rate sax ah!");
+      }
+    }
+
+    // Toggle Sidebar for Mobile
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebar');
+      sb.classList.toggle('hide');
+    }
+
+    // Load Live Realtime Transactions
     db.ref("transactions").on("value", (snapshot) => {
       const tbody = document.getElementById("sheet-body");
       tbody.innerHTML = "";
@@ -206,8 +325,8 @@
             <td><strong>${item.customerName}</strong></td>
             <td><span class="${item.type === 'BUY' ? 'badge-buy' : 'badge-sell'}">${item.type}</span></td>
             <td>$${Number(item.amountUSD).toLocaleString()}</td>
-            <td>${Number(item.exchangeRate).toLocaleString()}</td>
-            <td><strong>${Number(item.totalLocal).toLocaleString()}</strong></td>
+            <td>${Number(item.exchangeRate).toLocaleString()} ETB</td>
+            <td><strong>${Number(item.totalLocal).toLocaleString()} ETB</strong></td>
             <td><button onclick="deleteRow('${key}')" style="color:red; border:none; background:none; cursor:pointer;">🗑️ Delete</button></td>
           `;
           tbody.appendChild(row);
@@ -221,7 +340,7 @@
       const name = document.getElementById("custName").value;
       const type = document.getElementById("transType").value;
       const usd = Number(document.getElementById("amountUSD").value);
-      const rate = Number(document.getElementById("exRate").value) || currentLiveRate;
+      const rate = Number(document.getElementById("exRate").value) || currentAdminRate;
 
       db.ref("transactions").push({
         customerName: name,
@@ -250,9 +369,28 @@
 
       document.getElementById('sec-' + secName).style.display = 'block';
       document.getElementById('btn-' + secName).classList.add('active');
+
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.add('hide');
+      }
     }
 
-    // AI Chat Bot Engine
+    // EXPORT FUNCTIONS (EXCEL & PDF)
+    function exportToExcel() {
+      const table = document.getElementById("sarifka-table");
+      const wb = XLSX.utils.table_to_book(table, { sheet: "Sarifka ETB" });
+      XLSX.writeFile(wb, "Sarifle_Report_ETB.xlsx");
+    }
+
+    function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("Warbixinta Sarifka (USD / ETB)", 14, 15);
+      doc.autoTable({ html: '#sarifka-table', startY: 20 });
+      doc.save("Sarifle_Report_ETB.pdf");
+    }
+
+    // SMART AI CHATBOT ENGINE WITH CUSTOM RATE SYNC
     function sendAIMessage() {
       const inputEl = document.getElementById('user-input');
       const chatBox = document.getElementById('chat-box');
@@ -264,25 +402,34 @@
       inputEl.value = '';
 
       setTimeout(() => {
-        let aiResponse = "Waan ka xumahay, su'aashaada si buuxda ma u fahmin. Waxad igu weydiin kartaa qiimaha sarifka ama xisaabinta USD.";
+        let aiResponse = "Sidaad u saxsan tahay! Waxaan ahay AI-ga Sariflaha. Waxad igu weydiin kartaa qiimaha sarifka USD/ETB ama xisaabinta lacagaha.";
         const lowerText = text.toLowerCase();
+
+        // Extract numbers from input text
+        const numbers = text.match(/\d+/g);
         
-        if (lowerText.includes('rate') || lowerText.includes('qiimo') || lowerText.includes('maanta')) {
-          aiResponse = `Qiimaha sarifka ee maanta waa $1 USD = ${currentLiveRate.toLocaleString()} SLSH.`;
-        } else if (lowerText.includes('$') || lowerText.includes('dollar') || lowerText.includes('usd')) {
-          const numbers = text.match(/\d+/);
-          if (numbers) {
-            const amount = parseInt(numbers[0]);
-            const total = amount * currentLiveRate;
-            aiResponse = `$${amount} USD marka loo sarifo SLSH waxay ku noqonaysaa ${total.toLocaleString()} SLSH!`;
-          } else {
-            aiResponse = "Fadlan qor tirada dollar-ka aad rabto inaan ku xisaabiyo.";
+        if (lowerText.includes('rate') || lowerText.includes('qiimo') || lowerText.includes('maanta') || lowerText.includes('etb')) {
+          aiResponse = `Qiimaha sarifka ee maanta ee Sariflaha uu dejiyay waa 1 USD ($) = **${currentAdminRate} ETB**.`;
+        } 
+        
+        if (numbers && numbers.length > 0) {
+          const val = parseFloat(numbers[0]);
+          if (lowerText.includes('dollar') || lowerText.includes('$') || lowerText.includes('usd')) {
+            const calculated = (val * currentAdminRate).toLocaleString();
+            aiResponse = `$${val} USD marka loo badalo Birr-ka (ETB) waxay ku noqonaysaa **${calculated} ETB** (Rate-ka maanta: ${currentAdminRate}).`;
+          } else if (lowerText.includes('birr') || lowerText.includes('etb')) {
+            const calculated = (val / currentAdminRate).toFixed(2);
+            aiResponse = `${val} ETB marka loo badalo USD waxay ku noqonaysaa **$${calculated} USD**.`;
           }
+        }
+
+        if (lowerText.includes('asc') || lowerText.includes('seef') || lowerText.includes('hallo')) {
+          aiResponse = "Waalaykumusalaam! Soo dhaawow saaxiib, maxaan ku caawiyaa maanta oo ku saabsan sarifka ETB & Dollar?";
         }
 
         chatBox.innerHTML += `<div class="chat-msg ai-msg">${aiResponse}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 500);
+      }, 400);
     }
   </script>
 </body>
