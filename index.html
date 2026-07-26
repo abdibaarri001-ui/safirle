@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sarifle Portal & Smart AI Assistant</title>
+  <title>Sarifle Portal - Smart AI & Multi-User System</title>
 
   <!-- Firebase Legacy CDN -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -18,7 +18,10 @@
     :root {
       --primary: #2563eb;
       --bg: #f8fafc;
-      --dark: #1e293b;
+      --dark: #0f172a;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --admin-color: #7c3aed;
     }
     * { box-sizing: border-box; }
     body {
@@ -28,7 +31,91 @@
       color: #334155;
     }
 
-    /* Mobile Header & Toggle */
+    /* Auth Screen Modal */
+    #auth-screen {
+      display: flex;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--dark);
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      padding: 15px;
+    }
+    .auth-card {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    .auth-card h2 { margin-top: 0; color: var(--dark); text-align: center; }
+    .auth-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* Welcome Screen Styling */
+    .welcome-card {
+      text-align: center;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .stars-container {
+      font-size: 28px;
+      margin-bottom: 10px;
+      animation: pulse 1.5s infinite alternate;
+    }
+    .welcome-title {
+      font-size: 22px;
+      color: #60a5fa;
+      margin-bottom: 8px;
+    }
+    .welcome-subtext {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+    .welcome-features {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .welcome-features p { margin: 6px 0; }
+    .btn-welcome {
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      font-size: 15px;
+      padding: 12px;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+    }
+    .btn-secondary-welcome {
+      width: 100%;
+      margin-top: 10px;
+      background: transparent;
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Layout */
     .top-navbar {
       background: var(--dark);
       color: white;
@@ -38,23 +125,20 @@
       align-items: center;
     }
     .toggle-btn {
-      background: #334155;
+      background: #1e293b;
       color: white;
-      border: none;
+      border: 1px solid #334155;
       padding: 8px 12px;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
     }
 
-    /* App Layout */
     .app-layout {
       display: flex;
-      min-height: calc(100vh - 50px);
-      position: relative;
+      min-height: calc(100vh - 55px);
     }
 
-    /* Responsive Sidebar */
     #sidebar {
       width: 250px;
       background-color: var(--dark);
@@ -62,9 +146,7 @@
       padding: 20px 15px;
       transition: all 0.3s ease;
     }
-    #sidebar.hide {
-      display: none;
-    }
+    #sidebar.hide { display: none; }
 
     .nav-btn {
       width: 100%;
@@ -95,11 +177,11 @@
       background: #fff;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
       margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
     }
 
-    /* Inputs & Buttons Responsive Grid */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -114,16 +196,7 @@
       width: 100%;
     }
 
-    .export-btns {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    /* Data Table Style */
-    .table-container {
-      overflow-x: auto;
-    }
+    .table-container { overflow-x: auto; }
     table.data-table {
       width: 100%;
       border-collapse: collapse;
@@ -138,7 +211,7 @@
     .badge-buy { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     .badge-sell { background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
 
-    /* AI Chat Engine Widget */
+    /* AI Chat System */
     .chat-box {
       border: 1px solid #e2e8f0;
       border-radius: 8px;
@@ -154,30 +227,86 @@
       border-radius: 8px;
       max-width: 85%;
       font-size: 14px;
-      line-height: 1.4;
+      line-height: 1.5;
     }
     .user-msg { background: #dbeafe; color: #1e40af; margin-left: auto; text-align: right; }
     .ai-msg { background: #ffffff; color: #0f172a; border: 1px solid #e2e8f0; }
 
-    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-    .btn-success { background-color: #16a34a; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
-    .btn-danger { background-color: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
+    .btn-primary { background-color: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; width:100%; margin-top:8px;}
+    .btn-success { background-color: var(--success); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
 
     @media (max-width: 768px) {
-      #sidebar {
-        position: absolute;
-        z-index: 1000;
-        height: 100%;
-      }
+      #sidebar { position: absolute; z-index: 1000; height: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP NAVBAR MOBILE TOGGLE -->
+  <!-- AUTH SCREEN MODAL -->
+  <div id="auth-screen">
+    
+    <!-- 1. WELCOME SCREEN FOR NEW DEVICES -->
+    <div id="welcome-screen" class="auth-card welcome-card" style="display: none;">
+      <div class="stars-container">
+        ✨ ⭐ ✨ ⭐ ✨
+      </div>
+      <h1 class="welcome-title">Ku Soo Dhawaw Sarifle Portal! 🚀</h1>
+      <p class="welcome-subtext">Nidaamka ugu habboon ee maamulka sarifka lacagaha.</p>
+      
+      <div class="welcome-features">
+        <p>🌟 Sarifka ETB / USD ee waqtiga dhabta ah</p>
+        <p>🛡️ Kaydinta xogta oo ammaan ah</p>
+        <p>🤖 Caawiyaha AI oo garanaya Akoonnada Lacagaha</p>
+      </div>
+
+      <button onclick="goToSignup()" class="btn-welcome">
+        ✨ Abuur Akoon Cusub
+      </button>
+      
+      <button onclick="goToLogin()" class="btn-secondary-welcome">
+        🔑 Ma leedahay Akoon? Soo Gal
+      </button>
+    </div>
+
+    <!-- 2. LOGIN FORM -->
+    <div class="auth-card" id="login-box">
+      <h2>🔑 Soo Gal Akoonkaaga</h2>
+      <input type="tel" id="loginPhone" placeholder="Teleshoonkaaga (e.g. 0912345678)">
+      <input type="password" id="loginPin" maxlength="4" placeholder="Sirtiisa 4-ta jiifar ah (PIN)">
+      <button onclick="handleLogin()" class="btn-primary">Soo Gal System-ka</button>
+      <p style="text-align:center; margin-top:15px; font-size:14px;">
+        Akaan ma lehid? <a href="#" onclick="toggleAuthForms('signup')" style="color:var(--primary); font-weight:bold;">Sameyso Akoon Cusub</a>
+      </p>
+    </div>
+
+    <!-- 3. SIGNUP FORM -->
+    <div class="auth-card" id="signup-box" style="display: none;">
+      <h2>📝 Abuur Akoon Cusub</h2>
+      <input type="text" id="regFullName" placeholder="1. Magacaaga Buuxa">
+      <input type="text" id="regUsername" placeholder="2. Username (Magaca Isticmaalka)">
+      <input type="tel" id="regPhone" placeholder="3. Number-kaaga Telefoonka (10 Jiifar)">
+      <input type="password" id="regPin" maxlength="4" placeholder="4. Sirta (4-ta lambar ee PIN-ka)">
+      <button onclick="handleSignup()" class="btn-primary" style="background-color: var(--success);">Diiwaan Gali</button>
+      <p style="text-align:center; margin-top:15px; font-size:14px;">
+        Akoon horay ma u lahayd? <a href="#" onclick="toggleAuthForms('login')" style="color:var(--primary); font-weight:bold;">Soo Gal Halkan</a>
+      </p>
+    </div>
+
+  </div>
+
+  <!-- MAIN APP DISPLAY -->
   <div class="top-navbar">
     <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
     <h3 style="margin:0;">📊 Sarifle Portal</h3>
+    <div>
+      <span id="user-display-name" style="margin-right: 10px; font-weight:bold;"></span>
+      <button class="toggle-btn" onclick="handleLogout()" style="background:#dc2626;">🚪 Ka Bax</button>
+    </div>
   </div>
 
   <div class="app-layout">
@@ -185,58 +314,46 @@
     <!-- SIDEBAR -->
     <div id="sidebar">
       <h3 style="margin-top:0;">📊 Sarifle System</h3>
-      <button class="nav-btn active" id="btn-sarifka" onclick="showSection('sarifka')">📑 Qaybta Sarifka</button>
-      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">🤖 Customer Rates & AI</button>
+      <button class="nav-btn active" id="btn-sarifka" onclick="showSection('sarifka')">📑 Akoonkayga Sarifka</button>
+      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">🤖 Live Rates & Smart AI</button>
+      
+      <!-- SUPER ADMIN BUTTON -->
+      <button class="nav-btn" id="btn-admin-panel" onclick="showSection('admin-panel')" style="display:none; background: var(--admin-color); color: white; margin-top: 15px;">
+        👑 Super Admin Panel
+      </button>
     </div>
 
     <!-- MAIN CONTENT AREA -->
     <div id="main-content">
       
-      <!-- VIEW 1: QAYBTA SARIFKA ADMIN -->
+      <!-- VIEW 1: PRIVATE USER TRANSACTIONS -->
       <div id="sec-sarifka">
-        <h2>💱 Sarifle Management System (ETB / USD)</h2>
-        
-        <!-- ADMIN RATE SETTING CARD -->
-        <div class="card" style="background: #f0fdf4; border-left: 5px solid #16a34a;">
-          <h3 style="margin-top:0; color:#166534;">⚙️ Maamul Qiimaha Sarifka ee Maanta (Admin Rate Control)</h3>
-          <p style="font-size:14px; margin-bottom:10px;">Geli qiimaha aad maanta ku sarifayso si AI-gu si toos ah macmiilka ugu sheego:</p>
-          <div style="display:flex; gap:10px; max-width:400px;">
-            <input type="number" id="adminTodayRate" placeholder="Geli Rate-ka Maanta (e.g. 183)" step="any" style="padding:8px; flex:1; border:1px solid #cbd5e1; border-radius:6px;">
-            <button onclick="updateTodayRate()" class="btn-success">💾 Keydi Rate-ka</button>
-          </div>
-        </div>
+        <h2>💱 Akoonkayga Sarifka (Personal Dashboard)</h2>
 
         <div class="card">
+          <h3>+ Ku Dar Sarif Cusub</h3>
           <form id="entry-form" onsubmit="handleAddRow(event)">
             <div class="form-grid">
-              <input type="text" id="custName" placeholder="Magaca Macmiilka" required>
               <select id="transType">
                 <option value="BUY">BUY (Iibso USD)</option>
                 <option value="SELL">SELL (Iibi USD)</option>
               </select>
               <input type="number" id="amountUSD" placeholder="Lacagta ($ USD)" step="any" required>
               <input type="number" id="exRate" placeholder="Rate ETB (Auto/Custom)" step="any">
-              <button type="submit" class="btn-primary">+ Ku dar Row</button>
+              <button type="submit" class="btn-success" style="padding:10px;">+ Ku dar Row</button>
             </div>
           </form>
-
-          <!-- EXPORT SECTION BUTTONS -->
-          <div class="export-btns">
-            <button class="btn-success" onclick="exportToExcel()">📥 Soo rogal Excel (.xlsx)</button>
-            <button class="btn-danger" onclick="exportToPDF()">📄 Soo rogal PDF Document</button>
-          </div>
 
           <div class="table-container">
             <table class="data-table" id="sarifka-table">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Macmiilka</th>
                   <th>Nooca</th>
                   <th>USD ($)</th>
                   <th>Rate (ETB)</th>
                   <th>Total (ETB)</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="sheet-body"></tbody>
@@ -245,24 +362,72 @@
         </div>
       </div>
 
-      <!-- VIEW 2: CUSTOMER PORTAL & AI BOT -->
+      <!-- VIEW 2: CUSTOMER PORTAL & SMART AI CHAT -->
       <div id="sec-customer-portal" style="display: none;">
-        <h2>🤖 Live ETB Exchange & AI Assistant</h2>
+        <h2>🤖 Live ETB Exchange & Smart AI Assistant</h2>
         
         <div class="card" style="background: #eff6ff; border-left: 5px solid var(--primary);">
-          <h3>📈 Qiimaha Sarifka ee Maanta (Set by Admin)</h3>
-          <p style="font-size: 18px;"><strong>1 USD ($) = <span id="live-rate-display" style="color:var(--primary); font-size:22px;">8500</span> ETB</strong></p>
-          <small style="color:#64748b;">*Qiimahan waxaa toos u cusboonaysiiyay Sariflaha maanta.*</small>
+          <h3>📈 Qiimaha Sarifka ee Maanta</h3>
+          <p style="font-size: 18px;"><strong>1 USD ($) = <span id="live-rate-display" style="color:var(--primary); font-size:24px;">183</span> ETB</strong></p>
         </div>
 
         <div class="card">
-          <h3>💬 Caawiyaha AI (Ethiopian Birr & USD Assistant)</h3>
+          <h3>💬 Caawiyaha Smart AI (Xisaabiye & Akoonnada Lacagaha)</h3>
           <div class="chat-box" id="chat-box">
-            <div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha AI ee Sariflaha ETB/USD. Maxaan ku caawinaa maanta? Waad i weydiin kartaa qiimaha sarifka maanta ama xisaabinta lacagaha.</div>
+            <div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha AI ee Sariflaha. Waxaad iga weydiin kartaa xisaabinta sarifka iyo akoonnada lagu soo shubayo lacagaha ETB ama USD!</div>
           </div>
           <div style="display: flex; gap: 10px;">
-            <input type="text" id="user-input" placeholder="Qor su'aashaada (e.g. 100$ intee weeye maanta?)" style="flex:1; padding: 10px; border:1px solid #cbd5e1; border-radius:6px;" onkeypress="if(event.key==='Enter') sendAIMessage()">
-            <button onclick="sendAIMessage()" class="btn-primary">Dir Su'aasha</button>
+            <input type="text" id="user-input" placeholder="Qor su'aashaada (e.g. $100 halkeen ugu soo shubaa ETB-ga?)" style="flex:1; padding: 10px; border:1px solid #cbd5e1; border-radius:6px;" onkeypress="if(event.key==='Enter') sendAIMessage()">
+            <button onclick="sendAIMessage()" class="btn-primary" style="width:auto; margin-top:0;">Dir</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 3: SUPER ADMIN PANEL -->
+      <div id="sec-admin-panel" style="display: none;">
+        <h2>👑 Super Admin Management Panel</h2>
+
+        <!-- Rate Setting -->
+        <div class="card" style="background: #f3e8ff; border-left: 5px solid var(--admin-color);">
+          <h3>⚙️ Beddel Qiimaha Sarifka Guud (Global Rate)</h3>
+          <div style="display:flex; gap:10px; max-width: 400px; margin-top:10px;">
+            <input type="number" id="newGlobalRate" placeholder="Geli Rate-ka Cusub (e.g. 185)" style="padding:10px; border:1px solid #cbd5e1; border-radius:6px; flex:1;">
+            <button onclick="updateGlobalRate()" class="btn-primary" style="background:var(--admin-color); width:auto; margin-top:0;">Cusboonaysii Rate</button>
+          </div>
+        </div>
+
+        <!-- Accounts Management -->
+        <div class="card" style="border-left: 5px solid var(--success);">
+          <h3>🏦 Maamul Akoonnada Lacagta lagu soo dirayo (ETB & USD)</h3>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:10px;">
+            <div>
+              <label><strong>Akoonnada ETB (CBE, Telebirr, jw):</strong></label>
+              <textarea id="adminEtbAccounts" rows="4" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; margin-top:5px;"></textarea>
+            </div>
+            <div>
+              <label><strong>Akoonnada USD (Binance, USDT, jw):</strong></label>
+              <textarea id="adminUsdAccounts" rows="4" style="width:100%; padding:8px; border:1px solid #cbd5e1; border-radius:6px; font-size:13px; margin-top:5px;"></textarea>
+            </div>
+          </div>
+          <button onclick="saveAdminBankAccounts()" class="btn-success" style="margin-top:10px; width:auto;">💾 Kaydi Akoonnada</button>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card">
+          <h3>👥 Dhammaan Isticmaaleyaasha Nidaamka</h3>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Magaca Buuxa</th>
+                  <th>Username</th>
+                  <th>Phone Number</th>
+                  <th>PIN</th>
+                  <th>Aaladda (Device)</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-body"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -271,7 +436,7 @@
   </div>
 
   <script>
-    // Realtime Database Configuration
+    // Firebase Realtime Database Config
     const firebaseConfig = {
       databaseURL: "https://safirle-default-rtdb.firebaseio.com/"
     };
@@ -279,71 +444,188 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let currentAdminRate = 183.00; // Default Initial Rate
+    // SUPER ADMIN CREDENTIALS
+    const SUPER_ADMIN_PHONE = "0915145197";
+    const SUPER_ADMIN_PIN = "9869";
 
-    // 1. Sync Active Admin Rate from Firebase
-    db.ref("settings/todayRate").on("value", (snapshot) => {
-      const val = snapshot.val();
-      if (val) {
-        currentAdminRate = parseFloat(val);
-        document.getElementById('live-rate-display').innerText = currentAdminRate;
-        document.getElementById('adminTodayRate').value = currentAdminRate;
-      }
+    let currentUser = null; 
+    let currentAdminRate = 183.00;
+
+    // DEFAULT ACCOUNTS DATA
+    let BANK_ACCOUNTS = {
+      ETB: "• Commercial Bank of Ethiopia (CBE): 1000123456789\n• Telebirr: 0915145197",
+      USD: "• Binance Pay ID: 123456789\n• USDT Wallet (TRC20): T9xXXXXX...XXXXX"
+    };
+
+    // Check Device & Listeners on Load
+    window.addEventListener("DOMContentLoaded", () => {
+      checkDeviceRegistration();
+      listenGlobalSettings();
     });
 
-    // 2. Function to Update Rate by Admin
-    function updateTodayRate() {
-      const rateVal = parseFloat(document.getElementById('adminTodayRate').value);
-      if (rateVal && rateVal > 0) {
-        db.ref("settings/todayRate").set(rateVal)
-          .then(() => alert("Rate-ka maanta si guul leh ayaa loo cusboonaysiiyay!"))
-          .catch(err => alert("Cilad ayaa dhacday: " + err.message));
+    function checkDeviceRegistration() {
+      const isKnownDevice = localStorage.getItem("sarifle_registered_device");
+
+      if (!isKnownDevice) {
+        document.getElementById("welcome-screen").style.display = "block";
+        document.getElementById("login-box").style.display = "none";
+        document.getElementById("signup-box").style.display = "none";
       } else {
-        alert("Fadlan geli Rate sax ah!");
+        document.getElementById("welcome-screen").style.display = "none";
+        document.getElementById("login-box").style.display = "block";
       }
     }
 
-    // Toggle Sidebar for Mobile
-    function toggleSidebar() {
-      const sb = document.getElementById('sidebar');
-      sb.classList.toggle('hide');
+    function toggleAuthForms(type) {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('login-box').style.display = type === 'signup' ? 'none' : 'block';
+      document.getElementById('signup-box').style.display = type === 'signup' ? 'block' : 'none';
     }
 
-    // Load Live Realtime Transactions
-    db.ref("transactions").on("value", (snapshot) => {
-      const tbody = document.getElementById("sheet-body");
-      tbody.innerHTML = "";
-      
-      const data = snapshot.val();
-      if (data) {
-        let index = 1;
-        Object.keys(data).forEach((key) => {
-          const item = data[key];
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${index++}</td>
-            <td><strong>${item.customerName}</strong></td>
-            <td><span class="${item.type === 'BUY' ? 'badge-buy' : 'badge-sell'}">${item.type}</span></td>
-            <td>$${Number(item.amountUSD).toLocaleString()}</td>
-            <td>${Number(item.exchangeRate).toLocaleString()} ETB</td>
-            <td><strong>${Number(item.totalLocal).toLocaleString()} ETB</strong></td>
-            <td><button onclick="deleteRow('${key}')" style="color:red; border:none; background:none; cursor:pointer;">🗑️ Delete</button></td>
-          `;
-          tbody.appendChild(row);
-        });
-      }
-    });
+    function goToSignup() { toggleAuthForms('signup'); }
+    function goToLogin() { toggleAuthForms('login'); }
 
-    // Add Row to Realtime Database
+    function isValidEthiopianPhone(phone) {
+      const ethRegex = /^(09|07)\d{8}$/;
+      return ethRegex.test(phone);
+    }
+
+    function getDeviceId() {
+      let deviceId = localStorage.getItem("sarifle_device_id");
+      if (!deviceId) {
+        deviceId = "DEV-" + Math.random().toString(36).substring(2, 11) + "-" + Date.now();
+        localStorage.setItem("sarifle_device_id", deviceId);
+      }
+      return deviceId;
+    }
+
+    // 1. SIGNUP
+    function handleSignup() {
+      const name = document.getElementById('regFullName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const phone = document.getElementById('regPhone').value.trim().replace(/\s+/g, '');
+      const pin = document.getElementById('regPin').value.trim();
+
+      if (!isValidEthiopianPhone(phone)) {
+        alert("⚠️ Khalad: Nambarka telefoonka waa inuu yahay 10 jiifar oo ka bilaabanaya 09 ama 07!");
+        return;
+      }
+
+      if (!name || !username || pin.length !== 4) {
+        alert("Fadlan dhammaystir dhammaan xogta! PIN-ku waa inuu 4 lambar yahay.");
+        return;
+      }
+
+      const deviceId = getDeviceId();
+
+      db.ref("users/" + phone).once("value", (snapshot) => {
+        if (snapshot.exists()) {
+          alert("Number-kan horay ayaa loogu diiwaan gashaday! Fadlan soo gal.");
+        } else {
+          db.ref("users/" + phone).set({
+            fullName: name,
+            username: username,
+            phone: phone,
+            pin: pin,
+            registeredDevice: deviceId,
+            createdAt: Date.now()
+          }).then(() => {
+            localStorage.setItem("sarifle_registered_device", "true");
+            alert("Akoonkaaga si guul leh ayaa loo abuuray! Hada soo gal.");
+            toggleAuthForms('login');
+          });
+        }
+      });
+    }
+
+    // 2. LOGIN
+    function handleLogin() {
+      const phone = document.getElementById('loginPhone').value.trim().replace(/\s+/g, '');
+      const pin = document.getElementById('loginPin').value.trim();
+
+      if (!isValidEthiopianPhone(phone)) {
+        alert("⚠️ Fadlan geli nambar Itoobiya oo sax ah (10 jiifar)!");
+        return;
+      }
+
+      if (!pin) {
+        alert("Geli PIN-kaaga!");
+        return;
+      }
+
+      // Super Admin Login
+      if (phone === SUPER_ADMIN_PHONE && pin === SUPER_ADMIN_PIN) {
+        currentUser = { fullName: "Maamulaha Guud (Super Admin)", phone: SUPER_ADMIN_PHONE, isAdmin: true };
+        localStorage.setItem("sarifle_registered_device", "true");
+        document.getElementById('auth-screen').style.display = 'none';
+        document.getElementById('user-display-name').innerText = "👑 " + currentUser.fullName;
+        document.getElementById('btn-admin-panel').style.display = 'block';
+        loadUserTransactions();
+        loadAdminUsersList();
+        alert("Ku soo dhawaw Super Admin Panel-ka!");
+        return;
+      }
+
+      // Regular User Login
+      db.ref("users/" + phone).once("value", (snapshot) => {
+        const userData = snapshot.val();
+        if (userData && userData.pin === pin) {
+          currentUser = userData;
+          localStorage.setItem("sarifle_registered_device", "true");
+          document.getElementById('auth-screen').style.display = 'none';
+          document.getElementById('user-display-name').innerText = "👤 " + currentUser.fullName;
+          document.getElementById('btn-admin-panel').style.display = 'none';
+          loadUserTransactions();
+        } else {
+          alert("Telefoonka ama PIN-ka ayaa khaldan!");
+        }
+      });
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('sheet-body').innerHTML = "";
+      checkDeviceRegistration();
+    }
+
+    // 3. TRANSACTIONS
+    function loadUserTransactions() {
+      if(!currentUser) return;
+
+      db.ref("user_transactions/" + currentUser.phone).on("value", (snapshot) => {
+        const tbody = document.getElementById("sheet-body");
+        tbody.innerHTML = "";
+        
+        const data = snapshot.val();
+        if (data) {
+          let index = 1;
+          Object.keys(data).forEach((key) => {
+            const item = data[key];
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${index++}</td>
+              <td><span class="${item.type === 'BUY' ? 'badge-buy' : 'badge-sell'}">${item.type}</span></td>
+              <td>$${Number(item.amountUSD).toLocaleString()}</td>
+              <td>${Number(item.exchangeRate).toLocaleString()} ETB</td>
+              <td><strong>${Number(item.totalLocal).toLocaleString()} ETB</strong></td>
+              <td><button onclick="deleteRow('${key}')" style="color:red; border:none; background:none; cursor:pointer;">🗑️ Delete</button></td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      });
+    }
+
     function handleAddRow(e) {
       e.preventDefault();
-      const name = document.getElementById("custName").value;
+      if(!currentUser) return;
+
       const type = document.getElementById("transType").value;
       const usd = Number(document.getElementById("amountUSD").value);
       const rate = Number(document.getElementById("exRate").value) || currentAdminRate;
 
-      db.ref("transactions").push({
-        customerName: name,
+      db.ref("user_transactions/" + currentUser.phone).push({
         type: type,
         amountUSD: usd,
         exchangeRate: rate,
@@ -356,41 +638,89 @@
 
     function deleteRow(key) {
       if (confirm("Ma ziidayaa in aad tirto safkan?")) {
-        db.ref("transactions/" + key).remove();
+        db.ref("user_transactions/" + currentUser.phone + "/" + key).remove();
       }
     }
+
+    // REALTIME GLOBAL SETTINGS
+    function listenGlobalSettings() {
+      db.ref("system_settings").on("value", (snapshot) => {
+        if(snapshot.exists()) {
+          const settings = snapshot.val();
+          if(settings.currentRate) {
+            currentAdminRate = settings.currentRate;
+            document.getElementById("live-rate-display").innerText = currentAdminRate;
+          }
+          if(settings.bankAccounts) {
+            BANK_ACCOUNTS = settings.bankAccounts;
+            document.getElementById("adminEtbAccounts").value = BANK_ACCOUNTS.ETB || "";
+            document.getElementById("adminUsdAccounts").value = BANK_ACCOUNTS.USD || "";
+          }
+        }
+      });
+    }
+
+    function updateGlobalRate() {
+      const newRate = Number(document.getElementById("newGlobalRate").value);
+      if(!newRate) return alert("Geli rate sax ah!");
+
+      db.ref("system_settings/currentRate").set(newRate).then(() => {
+        alert("Qiimaha Sarifka waa la cusboonaysiiyay: " + newRate + " ETB");
+        document.getElementById("newGlobalRate").value = "";
+      });
+    }
+
+    function saveAdminBankAccounts() {
+      const etbText = document.getElementById("adminEtbAccounts").value;
+      const usdText = document.getElementById("adminUsdAccounts").value;
+
+      db.ref("system_settings/bankAccounts").set({
+        ETB: etbText,
+        USD: usdText
+      }).then(() => {
+        alert("Akoonnada Bangiyada waa la kaydiyay!");
+      });
+    }
+
+    // ADMIN USERS LIST
+    function loadAdminUsersList() {
+      db.ref("users").on("value", (snapshot) => {
+        const tbody = document.getElementById("admin-users-body");
+        tbody.innerHTML = "";
+        const users = snapshot.val();
+        if(users) {
+          Object.keys(users).forEach(key => {
+            const u = users[key];
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${u.fullName || '-'}</td>
+              <td>${u.username || '-'}</td>
+              <td>${u.phone}</td>
+              <td><strong>${u.pin}</strong></td>
+              <td><small>${u.registeredDevice || 'Unknown'}</small></td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      });
+    }
+
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('hide'); }
 
     function showSection(secName) {
       document.getElementById('sec-sarifka').style.display = 'none';
       document.getElementById('sec-customer-portal').style.display = 'none';
+      document.getElementById('sec-admin-panel').style.display = 'none';
 
       document.getElementById('btn-sarifka').classList.remove('active');
       document.getElementById('btn-customer-portal').classList.remove('active');
+      document.getElementById('btn-admin-panel').classList.remove('active');
 
       document.getElementById('sec-' + secName).style.display = 'block';
       document.getElementById('btn-' + secName).classList.add('active');
-
-      if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.add('hide');
-      }
     }
 
-    // EXPORT FUNCTIONS (EXCEL & PDF)
-    function exportToExcel() {
-      const table = document.getElementById("sarifka-table");
-      const wb = XLSX.utils.table_to_book(table, { sheet: "Sarifka ETB" });
-      XLSX.writeFile(wb, "Sarifle_Report_ETB.xlsx");
-    }
-
-    function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text("Warbixinta Sarifka (USD / ETB)", 14, 15);
-      doc.autoTable({ html: '#sarifka-table', startY: 20 });
-      doc.save("Sarifle_Report_ETB.pdf");
-    }
-
-    // SMART AI CHATBOT ENGINE WITH CUSTOM RATE SYNC
+    // SMART AI CHAT ENGINE (WITH ACCOUNTS INTEGRATION)
     function sendAIMessage() {
       const inputEl = document.getElementById('user-input');
       const chatBox = document.getElementById('chat-box');
@@ -400,36 +730,38 @@
 
       chatBox.innerHTML += `<div class="chat-msg user-msg">${text}</div>`;
       inputEl.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
 
       setTimeout(() => {
-        let aiResponse = "Sidaad u saxsan tahay! Waxaan ahay AI-ga Sariflaha. Waxad igu weydiin kartaa qiimaha sarifka USD/ETB ama xisaabinta lacagaha.";
-        const lowerText = text.toLowerCase();
-
-        // Extract numbers from input text
+        let aiResponse = "";
+        const lower = text.toLowerCase();
         const numbers = text.match(/\d+/g);
-        
-        if (lowerText.includes('rate') || lowerText.includes('qiimo') || lowerText.includes('maanta') || lowerText.includes('etb')) {
-          aiResponse = `Qiimaha sarifka ee maanta ee Sariflaha uu dejiyay waa 1 USD ($) = **${currentAdminRate} ETB**.`;
-        } 
-        
+
+        let amountCalculated = null;
         if (numbers && numbers.length > 0) {
           const val = parseFloat(numbers[0]);
-          if (lowerText.includes('dollar') || lowerText.includes('$') || lowerText.includes('usd')) {
-            const calculated = (val * currentAdminRate).toLocaleString();
-            aiResponse = `$${val} USD marka loo badalo Birr-ka (ETB) waxay ku noqonaysaa **${calculated} ETB** (Rate-ka maanta: ${currentAdminRate}).`;
-          } else if (lowerText.includes('birr') || lowerText.includes('etb')) {
-            const calculated = (val / currentAdminRate).toFixed(2);
-            aiResponse = `${val} ETB marka loo badalo USD waxay ku noqonaysaa **$${calculated} USD**.`;
-          }
+          amountCalculated = (val * currentAdminRate).toLocaleString();
         }
 
-        if (lowerText.includes('asc') || lowerText.includes('seef') || lowerText.includes('hallo')) {
-          aiResponse = "Waalaykumusalaam! Soo dhaawow saaxiib, maxaan ku caawiyaa maanta oo ku saabsan sarifka ETB & Dollar?";
+        // Logic check for accounts
+        const wantsETB = lower.includes("etb") || lower.includes("telebirr") || lower.includes("cbe") || lower.includes("birr") || lower.includes("shubo") || lower.includes("soo dir");
+        const wantsUSD = lower.includes("usd") || lower.includes("doolar") || lower.includes("binance") || lower.includes("usdt") || lower.includes("wallet");
+
+        if (amountCalculated) {
+          aiResponse += `💰 **Xisaabinta Sarifka (Rate: 1 USD = ${currentAdminRate} ETB):**\n$${numbers[0]} USD waxay ku noqonaysaa **${amountCalculated} ETB**.\n\n`;
         }
 
-        chatBox.innerHTML += `<div class="chat-msg ai-msg">${aiResponse}</div>`;
+        if (wantsETB) {
+          aiResponse += `🏦 **Akoonnada lagu soo shubayo Lacagta ETB-da:**\n${BANK_ACCOUNTS.ETB}\n\n*Markaad soo shubto, fadlan sawirka risiidka (Receipt) halkan ku soo dir!*`;
+        } else if (wantsUSD) {
+          aiResponse += `💵 **Akoonnada lagu soo shubayo Lacagta USD-da:**\n${BANK_ACCOUNTS.USD}\n\n*Markaad soo shubto, fadlan screenshot halkan ugu soo dir maamulka!*`;
+        } else if (!amountCalculated) {
+          aiResponse = `Asc! Qiimaha sarifka ee maanta waa **1 USD = ${currentAdminRate} ETB**.\n\nMa ETB mise USD ayaa rabtaa inaad soo shubto si aan akoonka saxda ah kugu siiyo?`;
+        }
+
+        chatBox.innerHTML += `<div class="chat-msg ai-msg">${aiResponse.replace(/\n/g, '<br>')}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 400);
+      }, 350);
     }
   </script>
 </body>
