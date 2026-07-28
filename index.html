@@ -3,18 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sarifle App - Automated Exchange System</title>
+  <title>Sarifle App - Exchange System</title>
 
-  <!-- PWA Manifest & App Theme -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0f172a">
 
-  <!-- Chart.js for Live Graph -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- jsPDF for PDF Receipts Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Firebase Legacy CDN -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -33,7 +28,6 @@
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { margin: 0; background-color: var(--bg); color: var(--text); }
 
-    /* AUTH & WELCOME WIZARD */
     #auth-screen {
       display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(11, 15, 25, 0.98); justify-content: center; align-items: center; z-index: 3000; padding: 15px;
@@ -73,7 +67,6 @@
     .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
     .btn-link { background: transparent; color: var(--text-muted); border: 1px solid #334155; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; }
 
-    /* LAYOUT & NAVBAR */
     .top-navbar { background: #0f172a; color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; }
     .toggle-btn { background: #1e293b; color: white; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
@@ -87,12 +80,10 @@
     #main-content { flex: 1; padding: 25px; width: 100%; overflow-x: auto; }
     .card { background: var(--card-bg); padding: 22px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 22px; }
 
-    /* ONLINE STATUS BADGE */
     .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
     .dot-green { background-color: #10b981; box-shadow: 0 0 8px #10b981; }
     .dot-red { background-color: #ef4444; }
 
-    /* LIVE RATES & ANIMATED ARROWS */
     .rate-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px; }
     .rate-card { padding: 20px; border-radius: 16px; background: #0f172a; border: 1px solid #334155; position: relative; overflow: hidden; }
     .rate-val { font-size: 26px; font-weight: bold; color: #fff; }
@@ -111,13 +102,11 @@
     @keyframes arrowDownWave { 0% { transform: translateY(-2px) scale(0.9); } 100% { transform: translateY(4px) scale(1.2); } }
     @keyframes continuousMove { 0% { opacity: 0.7; transform: scale(0.97); } 100% { opacity: 1; transform: scale(1.03); } }
 
-    /* AI CHAT */
     .chat-box { border: 1px solid #334155; border-radius: 12px; height: 380px; overflow-y: auto; padding: 15px; background: #0f172a; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
     .chat-msg { padding: 12px 16px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
     .user-msg { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
     .ai-msg { background: #1e293b; color: var(--text); border: 1px solid #334155; align-self: flex-start; border-bottom-left-radius: 2px; }
 
-    /* GALLERY UPLOAD STYLING */
     .upload-card-chat { background: #0f172a; border: 1px dashed var(--accent); padding: 15px; border-radius: 12px; margin-top: 10px; }
     .file-upload-btn {
       display: inline-block; background: #1e293b; color: var(--accent); padding: 10px 15px;
@@ -126,7 +115,6 @@
     }
     .file-upload-btn:hover { background: var(--accent); color: #000; }
 
-    /* TABLES */
     .table-container { overflow-x: auto; }
     table.data-table { width: 100%; border-collapse: collapse; }
     table.data-table th, table.data-table td { padding: 14px 12px; border-bottom: 1px solid #334155; text-align: left; font-size: 14px; }
@@ -137,10 +125,24 @@
     .btn-pdf { background: #059669; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
     .btn-ban { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
+    /* IMAGE MODAL (FULLSCREEN ZOOM FOR ADMIN) */
+    .img-modal {
+      display: none; position: fixed; z-index: 5000; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column;
+    }
+    .img-modal img { max-width: 90%; max-height: 80%; border-radius: 12px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.5); }
+    .close-modal-btn { background: var(--danger); color: white; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; }
+
     @media (max-width: 768px) { #sidebar { position: absolute; z-index: 1000; height: 100%; } }
   </style>
 </head>
 <body>
+
+  <!-- FULLSCREEN IMAGE ZOOM MODAL FOR ADMIN -->
+  <div id="imageZoomModal" class="img-modal">
+    <img id="modalTargetImg" src="" alt="Rasiidka Faseexka ah">
+    <button class="close-modal-btn" onclick="closeImageModal()">❌ Xidh Sawirka</button>
+  </div>
 
   <!-- AUTH SCREEN -->
   <div id="auth-screen">
@@ -368,70 +370,31 @@
           </div>
         </div>
 
-        <!-- QAANADA MAAMULKA AKOONNADA SHIRKADAHA (Somalia + Ethiopia + Global) -->
+        <!-- QAANADA MAAMULKA AKOONNADA SHIRKADAHA -->
         <div class="card" style="border-left: 5px solid var(--accent);">
-          <h3>🏦 QAANADA MAAMULKA AKOONNADA SHIRKADAHA (Somalia, Ethiopia & Global)</h3>
-          <p style="font-size:13px; color:var(--text-muted);">Halkan ku qor akoonnada shirkadaha aad isticmaasho (Coopay-Ebirr, Kaafi Ebirr, Telebirr, CBE, Awash, EVC Plus, Zaad, Sahal, eDahab, Bankiyada Soomaaliya, Binance, Pyypl, Perfect Money). AI-gu si toos ah ayuu ugu jawaabi doonaa macmiilka!</p>
+          <h3>🏦 QAANADA MAAMULKA AKOONNADA SHIRKADAHA</h3>
+          <p style="font-size:13px; color:var(--text-muted);">Halkan ku qor akoonnada shirkadaha aad isticmaasho (Coopay-Ebirr, Kaafi Ebirr, Telebirr, CBE, Awash, EVC Plus, Zaad, Sahal, eDahab, Premier Bank, Binance, Pyypl, Perfect Money).</p>
           <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-top:10px;">
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🇪🇹 Coopay-Ebirr (Coop Bank):</label>
-              <input type="text" id="adminAccCoopay" placeholder="09xxxxxxx / Acc: Coopay">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🇪🇹 Kaafi Ebirr Account:</label>
-              <input type="text" id="adminAccKaafi" placeholder="09xxxxxxx / Kaafi Ebirr">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">💳 Telebirr Account:</label>
-              <input type="text" id="adminAccTelebirr" placeholder="0915145197 (Telebirr)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🏦 CBE Bank Account:</label>
-              <input type="text" id="adminAccCBE" placeholder="1000123456789 (CBE)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🏦 Awash Bank Account:</label>
-              <input type="text" id="adminAccAwash" placeholder="01320999888700 (Awash)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🇸🇴 EVC Plus (Hormuud):</label>
-              <input type="text" id="adminAccEVC" placeholder="061xxxxxxx (EVC Account)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🇸🇴 Zaad Service (Telesom):</label>
-              <input type="text" id="adminAccZaad" placeholder="063xxxxxxx (Zaad Account)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🇸🇴 Sahal Service (Golis):</label>
-              <input type="text" id="adminAccSahal" placeholder="069xxxxxxx (Sahal Account)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🇸🇴 eDahab (Somtel):</label>
-              <input type="text" id="adminAcceDahab" placeholder="062xxxxxxx (eDahab Account)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🏦 Premier Bank / Bankiyada Somalia:</label>
-              <input type="text" id="adminAccPremier" placeholder="Acc: 203004005 (Premier/Salaam)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">🌐 Binance Pay ID:</label>
-              <input type="text" id="adminAccBinance" placeholder="sarifle@pay.binance (ID: 88776655)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">💳 Pyypl Account:</label>
-              <input type="text" id="adminAccPyypl" placeholder="+251915145197 (Pyypl)">
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--accent);">💵 Perfect Money USD:</label>
-              <input type="text" id="adminAccPerfect" placeholder="U12345678 (Perfect Money)">
-            </div>
+            <div><label style="font-size:12px; color:var(--accent);">🇪🇹 Coopay-Ebirr (Coop Bank):</label><input type="text" id="adminAccCoopay" placeholder="09xxxxxxx"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🇪🇹 Kaafi Ebirr Account:</label><input type="text" id="adminAccKaafi" placeholder="09xxxxxxx"></div>
+            <div><label style="font-size:12px; color:var(--accent);">💳 Telebirr Account:</label><input type="text" id="adminAccTelebirr" placeholder="0915145197"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🏦 CBE Bank Account:</label><input type="text" id="adminAccCBE" placeholder="1000123456789"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🏦 Awash Bank Account:</label><input type="text" id="adminAccAwash" placeholder="01320999888700"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🇸🇴 EVC Plus (Hormuud):</label><input type="text" id="adminAccEVC" placeholder="061xxxxxxx"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🇸🇴 Zaad Service (Telesom):</label><input type="text" id="adminAccZaad" placeholder="063xxxxxxx"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🇸🇴 Sahal Service (Golis):</label><input type="text" id="adminAccSahal" placeholder="069xxxxxxx"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🇸🇴 eDahab (Somtel):</label><input type="text" id="adminAcceDahab" placeholder="062xxxxxxx"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🏦 Premier Bank / Somalia:</label><input type="text" id="adminAccPremier" placeholder="203004005"></div>
+            <div><label style="font-size:12px; color:var(--accent);">🌐 Binance Pay ID:</label><input type="text" id="adminAccBinance" placeholder="sarifle@pay"></div>
+            <div><label style="font-size:12px; color:var(--accent);">💳 Pyypl Account:</label><input type="text" id="adminAccPyypl" placeholder="+251915145197"></div>
+            <div><label style="font-size:12px; color:var(--accent);">💵 Perfect Money USD:</label><input type="text" id="adminAccPerfect" placeholder="U12345678"></div>
           </div>
           <button onclick="saveCompanyAccounts()" class="btn-action" style="background:var(--accent); color:#000; margin-top:15px; width:auto; padding:10px 25px;">💾 Kaydi Akoonnada Shirkadaha Buuxa</button>
         </div>
 
-        <!-- VERIFICATION TRANSACTIONS FROM AI -->
+        <!-- VERIFICATION TRANSACTIONS FROM AI WITH HIGH QUALITY ZOOM -->
         <div class="card" style="border-left: 5px solid var(--success);">
-          <h3>📥 Rasiidhada & Codsiyada AI-ga ka soo dhacay (Pending Verification)</h3>
+          <h3>📥 Rasiidhada & Codsiyada AI-ga ka soo dhacay (Kullu ku fiiri Faseex/Zoom)</h3>
           <div class="table-container">
             <table class="data-table">
               <thead>
@@ -439,7 +402,7 @@
                   <th>Macmiilka</th>
                   <th>Telefoonka</th>
                   <th>Shirkada/Bank-ga</th>
-                  <th>Rasiidka (Sawir)</th>
+                  <th>Rasiidka (Taabo si aad u Zoom-gareyso 🔍)</th>
                   <th>Number-ka Lacagta Loo Celinayo</th>
                   <th>Taariikhda</th>
                   <th>Status</th>
@@ -497,10 +460,8 @@
   </div>
 
   <script>
-    // GEMINI API KEY CONFIGURATION
     const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
 
-    // FIREBASE INITIALIZATION
     const firebaseConfig = { databaseURL: "https://safirle-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -508,7 +469,6 @@
     const SUPER_ADMIN_PHONE = "0915145197";
     const SUPER_ADMIN_PIN = "9869";
 
-    // DEFAULT COMPANY ACCOUNTS INCLUDING COOPAY EBIRR & KAAFI EBIRR
     let COMPANY_ACCOUNTS = {
       "COOPAY EBIRR": "0915145197 (Sarifle Coopay-Ebirr Account)",
       "KAAFI EBIRR": "0915145197 (Sarifle Kaafi Ebirr Account)",
@@ -724,7 +684,7 @@
 
     function triggerBiometricAuth() {
       if (window.PublicKeyCredential) {
-        alert("👆 Faraha saar skreenka si loo xaqiijiyo (Biometric Simulated)...");
+        alert("👆 Faraha saar skreenka si loo xaqiijiyo...");
         const activeUser = localStorage.getItem("sarifle_active_user");
         if(activeUser) {
           currentUser = JSON.parse(activeUser);
@@ -898,13 +858,11 @@
       });
     }
 
-    // LISTEN & SAVE DYNAMIC COMPANY ACCOUNTS IN FIREBASE
     function listenCompanyAccounts() {
       db.ref("company_accounts").on("value", (snapshot) => {
         const accs = snapshot.val();
         if (accs) {
           COMPANY_ACCOUNTS = accs;
-          // Pre-fill Admin Inputs if Admin Panel is open
           if (document.getElementById("adminAccCoopay")) {
             document.getElementById("adminAccCoopay").value = accs["COOPAY EBIRR"] || "";
             document.getElementById("adminAccKaafi").value = accs["KAAFI EBIRR"] || "";
@@ -991,7 +949,7 @@
         });
       });
 
-      // LOAD RASIIDHADA IYO TRANSACTIONS-KA CUSUB EE AI-GA KA SOO DHACAY
+      // LOAD RASIIDHADA WITH FULLSCREEN ZOOM OPTION
       db.ref("ai_proofs").on("value", (snap) => {
         const tbody = document.getElementById("admin-receipts-body");
         tbody.innerHTML = "";
@@ -1007,11 +965,9 @@
               <td>${p.userPhone}</td>
               <td><span style="color:var(--accent); font-weight:bold;">${p.company}</span></td>
               <td>
-                <a href="${p.receiptImg}" target="_blank">
-                  <img src="${p.receiptImg}" style="width:60px; height:60px; border-radius:8px; border:1px solid #334155; object-fit:cover;">
-                </a>
+                <img src="${p.receiptImg}" onclick="openImageModal('${p.receiptImg}')" style="width:70px; height:70px; border-radius:8px; border:2px solid var(--accent); object-fit:cover; cursor:pointer;" title="Taabo si aad u Zoom-gareyso">
               </td>
-              <td><b style="color:var(--success);">${p.refundNumber}</b></td>
+              <td><b style="color:var(--success); font-size:15px;">${p.refundNumber}</b></td>
               <td>${date}</td>
               <td>
                 <button class="btn-pdf" onclick="approveProof('${key}')">✅ Ansixi</button>
@@ -1021,6 +977,16 @@
           tbody.innerHTML += row;
         });
       });
+    }
+
+    // ZOOM IMAGE FUNCTIONS FOR ADMIN
+    function openImageModal(imgSrc) {
+      document.getElementById("modalTargetImg").src = imgSrc;
+      document.getElementById("imageZoomModal").style.display = "flex";
+    }
+
+    function closeImageModal() {
+      document.getElementById("imageZoomModal").style.display = "none";
     }
 
     function approveProof(key) {
@@ -1074,7 +1040,6 @@
       });
     }
 
-    // ADVANCED AI AUTOMATED PAYMENT FLOW INTEGRATION
     async function sendGeminiAIMessage() {
       const input = document.getElementById("user-input");
       const query = input.value.trim();
@@ -1086,7 +1051,6 @@
 
       const queryUpper = query.toUpperCase();
 
-      // DETECTION FOR DYNAMIC COMPANY ACCOUNTS (INCLUDING COOPAY & KAAFI)
       let matchedCompany = null;
       if (queryUpper.includes("COOPAY") || queryUpper.includes("COOP")) matchedCompany = "COOPAY EBIRR";
       else if (queryUpper.includes("KAAFI")) matchedCompany = "KAAFI EBIRR";
@@ -1127,7 +1091,6 @@
         return;
       }
 
-      // STANDARD GEMINI API REQUEST
       const loadingId = "loading-" + Date.now();
       chatBox.innerHTML += `<div class="chat-msg ai-msg" id="${loadingId}">⏳ Gemini AI waa uu fekerayaa...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
@@ -1176,7 +1139,6 @@
       }
     }
 
-    // FUNCTION TO UPLOAD RECEIPT FROM GALLERY AND SUBMIT TO FIREBASE FOR ADMIN
     function submitReceiptToAdmin(company, fileInputId) {
       const fileInput = document.getElementById(fileInputId);
       const refundNumber = document.getElementById("chatRefundNumber").value.trim();
