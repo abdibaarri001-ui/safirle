@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sarifle Portal - High Security Crypto-Style System</title>
+  <title>Sarifle App - Automated Exchange System</title>
 
   <!-- PWA Manifest & App Theme -->
   <link rel="manifest" href="manifest.json">
@@ -59,11 +59,11 @@
     .phone-prefix { background: #1e293b; padding: 12px 14px; font-weight: bold; color: var(--accent); border-right: 1px solid #334155; }
     .phone-wrapper input { border: none !important; background: transparent !important; }
 
-    input, select {
+    input, select, textarea {
       width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155;
       background: #0f172a; color: #fff; font-size: 15px; outline: none;
     }
-    input:focus { border-color: var(--accent); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 
     .btn-action {
       background: linear-gradient(90deg, #2563eb, #3b82f6);
@@ -88,32 +88,43 @@
     .card { background: var(--card-bg); padding: 22px; border-radius: 16px; border: 1px solid #334155; margin-bottom: 22px; }
 
     /* ONLINE STATUS BADGE */
-    .status-online { color: #10b981; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
-    .status-offline { color: #ef4444; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
     .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
     .dot-green { background-color: #10b981; box-shadow: 0 0 8px #10b981; }
     .dot-red { background-color: #ef4444; }
 
-    /* LIVE CRYPTO-STYLE RATES */
-    .rate-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
-    .rate-card { padding: 18px; border-radius: 12px; text-align: center; background: #0f172a; border: 1px solid #334155; }
-    .rate-val { font-size: 28px; font-weight: bold; margin-top: 6px; color: #fff; }
-    .rate-badge { font-size: 12px; padding: 3px 8px; border-radius: 12px; font-weight: bold; display: inline-block; margin-top: 5px; }
-    .pulse-green { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-    .pulse-red { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    /* LIVE RATES & ANIMATED ARROWS */
+    .rate-box-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px; }
+    .rate-card { padding: 20px; border-radius: 16px; background: #0f172a; border: 1px solid #334155; position: relative; overflow: hidden; }
+    .rate-val { font-size: 26px; font-weight: bold; color: #fff; }
+    
+    .trend-indicator {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 20px; font-weight: bold; font-size: 12px;
+      animation: continuousMove 1s infinite alternate ease-in-out;
+    }
+    .trend-up { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .trend-down { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
 
-    /* AI CHAT WITH REAL-TIME TYPING INDICATOR */
-    .chat-box { border: 1px solid #334155; border-radius: 12px; height: 350px; overflow-y: auto; padding: 15px; background: #0f172a; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .chat-msg { padding: 12px 16px; border-radius: 12px; max-width: 80%; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
+    .arrow-anim-up { display: inline-block; animation: arrowUpWave 0.6s infinite alternate ease-in-out; }
+    .arrow-anim-down { display: inline-block; animation: arrowDownWave 0.6s infinite alternate ease-in-out; }
+
+    @keyframes arrowUpWave { 0% { transform: translateY(2px) scale(0.9); } 100% { transform: translateY(-4px) scale(1.2); } }
+    @keyframes arrowDownWave { 0% { transform: translateY(-2px) scale(0.9); } 100% { transform: translateY(4px) scale(1.2); } }
+    @keyframes continuousMove { 0% { opacity: 0.7; transform: scale(0.97); } 100% { opacity: 1; transform: scale(1.03); } }
+
+    /* AI CHAT */
+    .chat-box { border: 1px solid #334155; border-radius: 12px; height: 380px; overflow-y: auto; padding: 15px; background: #0f172a; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-msg { padding: 12px 16px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
     .user-msg { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
     .ai-msg { background: #1e293b; color: var(--text); border: 1px solid #334155; align-self: flex-start; border-bottom-left-radius: 2px; }
-    
-    .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 12px; }
-    .typing-dot { width: 6px; height: 6px; background: var(--text-muted); border-radius: 50%; animation: typing 1.4s infinite ease-in-out; }
-    .typing-dot:nth-child(1) { animation-delay: 200ms; }
-    .typing-dot:nth-child(2) { animation-delay: 300ms; }
-    .typing-dot:nth-child(3) { animation-delay: 400ms; }
-    @keyframes typing { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+    /* GALLERY UPLOAD STYLING */
+    .upload-card-chat { background: #0f172a; border: 1px dashed var(--accent); padding: 15px; border-radius: 12px; margin-top: 10px; }
+    .file-upload-btn {
+      display: inline-block; background: #1e293b; color: var(--accent); padding: 10px 15px;
+      border-radius: 8px; border: 1px solid var(--accent); cursor: pointer; text-align: center;
+      font-size: 13px; font-weight: bold; width: 100%; transition: 0.2s; margin-top: 6px;
+    }
+    .file-upload-btn:hover { background: var(--accent); color: #000; }
 
     /* TABLES */
     .table-container { overflow-x: auto; }
@@ -124,117 +135,98 @@
     .badge-sell { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 4px 8px; border-radius: 6px; font-weight: bold; }
 
     .btn-pdf { background: #059669; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
-    .btn-login-as { background: var(--admin-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
+    .btn-ban { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
     @media (max-width: 768px) { #sidebar { position: absolute; z-index: 1000; height: 100%; } }
   </style>
 </head>
 <body>
 
-  <!-- AUTH SCREEN (STRICT WIZARD & SMART ROUTING) -->
+  <!-- AUTH SCREEN -->
   <div id="auth-screen">
-    
-    <!-- REGISTER WIZARD FOR NEW USERS -->
     <div id="welcome-screen" class="auth-card" style="display: none;">
-      
-      <!-- STEP 0: START SCREEN -->
       <div id="step-start" class="wizard-step active">
         <div style="font-size: 40px; margin-bottom: 10px;">⚡</div>
-        <h1 class="welcome-title">Ku Soo Dhawaaw Sarifle</h1>
-        <p class="welcome-subtext">Nidaam casri ah oo kugu xidhaya sarifka lacagaha. Sameyso akoon cusub oo ammaan ah.</p>
+        <h1 class="welcome-title">Ku Soo Dhawaaw Sarifle App</h1>
+        <p class="welcome-subtext">Nidaam casri ah oo kugu xidhaya sarifka lacagaha.</p>
         <button onclick="nextWizardStep('step-name')" class="btn-action">🚀 Start (Bilow Diiwaan-gelinta)</button>
         <button onclick="goToLogin()" class="btn-link">🔑 Ma leedahay Akoon Hore? Soo Gal</button>
       </div>
 
-      <!-- STEP 1: MAGACA BUUXA -->
       <div id="step-name" class="wizard-step">
         <div class="step-indicator"><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
         <h2 style="color:var(--accent); margin-top:0;">1. Magacaaga Buuxa</h2>
-        <p class="welcome-subtext">Fadlan geli magacaaga iyo maadaama aad isticmaalayso nidaamka.</p>
         <div class="input-group">
-          <label>Magaca Buuxa (Full Name)</label>
+          <label>Magaca Buuxa</label>
           <input type="text" id="regFullName" placeholder="e.g. Maxamed Cali">
         </div>
-        <button onclick="validateStepName()" class="btn-action">➡️ Send (Sii wad)</button>
+        <button onclick="validateStepName()" class="btn-action">➡️ Sii wad</button>
         <button onclick="nextWizardStep('step-start')" class="btn-link">⬅️ Dib u noqo</button>
       </div>
 
-      <!-- STEP 2: TELEFOONKA ETHIOPIA (+2519...) -->
       <div id="step-phone" class="wizard-step">
         <div class="step-indicator"><div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div></div>
         <h2 style="color:var(--accent); margin-top:0;">2. Number-ka Telefoonka</h2>
-        <p class="welcome-subtext">Geli sagaalka (8) digit ee Nambar-kaaga Ethiopia ilaa +2519.</p>
         <div class="input-group">
-          <label>Telefoonka (Ethiopia)</label>
+          <label>Telefoonka (Ethiopia/Somalia)</label>
           <div class="phone-wrapper">
-            <span class="phone-prefix">+2519</span>
-            <input type="tel" id="regPhone" maxlength="8" placeholder="12345678">
+            <span class="phone-prefix">+</span>
+            <input type="tel" id="regPhone" placeholder="251... ama 252...">
           </div>
         </div>
-        <button onclick="validateStepPhone()" class="btn-action">➡️ Send (Sii wad)</button>
+        <button onclick="validateStepPhone()" class="btn-action">➡️ Sii wad</button>
         <button onclick="nextWizardStep('step-name')" class="btn-link">⬅️ Dib u noqo</button>
       </div>
 
-      <!-- STEP 3: PIN-KA 4 JIIFAR AH -->
       <div id="step-pin" class="wizard-step">
         <div class="step-indicator"><div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div></div>
         <h2 style="color:var(--accent); margin-top:0;">3. Geli PIN-kaaga</h2>
-        <p class="welcome-subtext">U samayso akoonkaaga fure noqonaya 4 digit oo qarsoodi ah.</p>
         <div class="input-group">
           <label>PIN (4 Digit)</label>
           <input type="password" id="regPin" maxlength="4" placeholder="****">
         </div>
-        <button onclick="validateStepPin()" class="btn-action">➡️ Send (Sii wad)</button>
+        <button onclick="validateStepPin()" class="btn-action">➡️ Sii wad</button>
         <button onclick="nextWizardStep('step-phone')" class="btn-link">⬅️ Dib u noqo</button>
       </div>
 
-      <!-- STEP 4: CONFIRM PIN -->
       <div id="step-confirm-pin" class="wizard-step">
         <div class="step-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div></div>
-        <h2 style="color:var(--accent); margin-top:0;">4. Soo Celi PIN-ka (Confirm)</h2>
-        <p class="welcome-subtext">Fadlan mar labaad geli PIN-kaagii si loo xaqiijiyo.</p>
+        <h2 style="color:var(--accent); margin-top:0;">4. Soo Celi PIN-ka</h2>
         <div class="input-group">
           <label>Soo Celi PIN-ka</label>
           <input type="password" id="regConfirmPin" maxlength="4" placeholder="****">
         </div>
-        <button onclick="handleCompleteSignup()" class="btn-action" style="background:var(--success);">✨ Dhammaystir & Abuur Akoon</button>
+        <button onclick="handleCompleteSignup()" class="btn-action" style="background:var(--success);">✨ Abuur Akoon</button>
         <button onclick="nextWizardStep('step-pin')" class="btn-link">⬅️ Dib u noqo</button>
       </div>
-
     </div>
 
-    <!-- LOGIN BOX FOR KNOWN USERS -->
+    <!-- LOGIN BOX -->
     <div class="auth-card" id="login-box" style="display: none;">
       <h2 style="color:var(--accent); margin-top:0;">🔑 Soo Gal Akoonkaaga</h2>
-      <p class="welcome-subtext">Telefoonkaaga horay ayaa loo gartay. Geli xogtaada:</p>
-      
       <div class="input-group">
-        <label>Telefoonka (Ethiopia)</label>
+        <label>Telefoonka</label>
         <div class="phone-wrapper">
-          <span class="phone-prefix">+2519</span>
-          <input type="tel" id="loginPhone" maxlength="8" placeholder="12345678">
+          <span class="phone-prefix">+</span>
+          <input type="tel" id="loginPhone" placeholder="09... ama 061...">
         </div>
       </div>
-
       <div class="input-group">
         <label>PIN-ka (4 Digit)</label>
         <input type="password" id="loginPin" maxlength="4" placeholder="****">
       </div>
-
       <button onclick="handleLogin()" class="btn-action">Soo Gal System-ka</button>
       <button onclick="triggerBiometricAuth()" id="bio-login-btn" class="btn-link" style="display:none; border-color:var(--accent); color:var(--accent);">👆 Ku soo gal Fingerprint</button>
-      
       <p style="text-align:center; margin-top:15px; font-size:13px; color:var(--text-muted);">
         Akoon ma lehid? <a href="#" onclick="resetToStartWizard()" style="color:var(--accent); font-weight:bold;">Biloow Start</a>
       </p>
     </div>
-
   </div>
 
-  <!-- MAIN CRYPTO DASHBOARD -->
+  <!-- MAIN DASHBOARD -->
   <div class="top-navbar">
     <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
-    <h3 style="margin:0; color:var(--accent);">⚡ Sarifle Crypto Portal</h3>
+    <h3 style="margin:0; color:var(--accent);">⚡ Sarifle Portal</h3>
     <div>
       <span id="user-display-name" style="margin-right: 10px; font-weight:bold;"></span>
       <button class="toggle-btn" onclick="handleLogout()" style="background:var(--danger);">🚪 Ka Bax</button>
@@ -244,20 +236,15 @@
   <div class="app-layout">
     <div id="sidebar">
       <button class="nav-btn active" id="btn-sarifka" onclick="showSection('sarifka')">💼 Akoonkayga Sarifka</button>
-      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">📈 Live Market & AI Assistant</button>
+      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">📈 Live Market & Gemini AI</button>
       <button class="nav-btn" id="btn-settings" onclick="showSection('settings')">⚙️ Amnesty & Settings</button>
-      
-      <button class="nav-btn" id="btn-admin-panel" onclick="showSection('admin-panel')" style="display:none; background: var(--admin-color); color: white; margin-top: 15px;">
-        👑 Super Admin Panel
-      </button>
+      <button class="nav-btn" id="btn-admin-panel" onclick="showSection('admin-panel')" style="display:none; background: var(--admin-color); color: white; margin-top: 15px;">👑 Super Admin Panel</button>
     </div>
 
     <div id="main-content">
-
       <!-- SECTION 1: PERSONAL DASHBOARD -->
       <div id="sec-sarifka">
-        <h2>💼 Dashboard-ka Sarifka (Bitcoin-Style Ledger)</h2>
-        
+        <h2>💼 Dashboard-ka Sarifka</h2>
         <div class="card">
           <h3>+ Ku Dar Isdhaafsi Cusub (New Transaction)</h3>
           <form id="entry-form" onsubmit="handleAddRow(event)">
@@ -265,8 +252,8 @@
               <div>
                 <label style="font-size:12px; color:var(--text-muted);">Nooca Sarifka</label>
                 <select id="transType" onchange="autoFillRate()">
-                  <option value="BUY">BUY (Naga Iibi USD / Rabta ETB)</option>
-                  <option value="SELL">SELL (Naga Iibso USD / Haysa ETB)</option>
+                  <option value="BUY">BUY (Naga Iibi USD)</option>
+                  <option value="SELL">SELL (Naga Iibso USD)</option>
                 </select>
               </div>
               <div>
@@ -274,7 +261,7 @@
                 <input type="number" id="amountUSD" placeholder="0.00" step="any" required>
               </div>
               <div>
-                <label style="font-size:12px; color:var(--text-muted);">Rate ETB</label>
+                <label style="font-size:12px; color:var(--text-muted);">Rate ETB / Local</label>
                 <input type="number" id="exRate" placeholder="Rate" step="any">
               </div>
             </div>
@@ -291,8 +278,8 @@
                   <th>#</th>
                   <th>Nooca</th>
                   <th>USD ($)</th>
-                  <th>Rate (ETB)</th>
-                  <th>Total (ETB)</th>
+                  <th>Rate</th>
+                  <th>Total</th>
                   <th>Taariikhda</th>
                   <th>Rasiidh (PDF)</th>
                   <th>Action</th>
@@ -304,57 +291,69 @@
         </div>
       </div>
 
-      <!-- SECTION 2: LIVE MARKET GRAPH & AI -->
+      <!-- SECTION 2: LIVE MARKET & AI -->
       <div id="sec-customer-portal" style="display: none;">
-        <h2>📈 Live Market & Interactive Rate History</h2>
-        
+        <h2>📈 Live Market & Dynamic Rate History</h2>
         <div class="rate-box-grid">
-          <div class="rate-card">
-            <div style="color:var(--text-muted); font-size:13px;">📥 WE BUY RATE</div>
-            <div class="rate-val" id="live-buy-display">183.00 <small style="font-size:14px; color:var(--text-muted);">ETB</small></div>
-            <span class="rate-badge pulse-green" id="buy-status">● Live Fluctuating</span>
+          <div class="rate-card" style="border-top: 4px solid var(--success);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color:var(--text-muted); font-size:13px; font-weight:bold;">📥 WE BUY (Naga Iibi)</span>
+              <span class="trend-indicator trend-up" id="buy-badge"><span class="arrow-anim-up" id="buy-arrow">▲</span> <span id="buy-status-text">Live Rate</span></span>
+            </div>
+            <div style="margin-top: 12px;">
+              <span style="font-size: 13px; color: var(--text-muted);">$1 USD =</span>
+              <div class="rate-val" id="live-buy-display">184.08 <small style="font-size:13px; color:var(--text-muted);">ETB</small></div>
+            </div>
+            <div style="margin-top: 12px; background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 10px; border: 1px dashed var(--success);">
+              <div style="font-size: 12px; color: var(--success); font-weight: bold;">💵 Qiimaha $100 USD:</div>
+              <div id="buy-100-display" style="font-size: 26px; font-weight: bold; color: #10b981;">18,408 ETB</div>
+            </div>
           </div>
-          <div class="rate-card">
-            <div style="color:var(--text-muted); font-size:13px;">📤 WE SELL RATE</div>
-            <div class="rate-val" id="live-sell-display">283.00 <small style="font-size:14px; color:var(--text-muted);">ETB</small></div>
-            <span class="rate-badge pulse-red" id="sell-status">● Live Fluctuating</span>
+
+          <div class="rate-card" style="border-top: 4px solid var(--danger);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color:var(--text-muted); font-size:13px; font-weight:bold;">📤 WE SELL (Naga Iibso)</span>
+              <span class="trend-indicator trend-down" id="sell-badge"><span class="arrow-anim-down" id="sell-arrow">▼</span> <span id="sell-status-text">Live Rate</span></span>
+            </div>
+            <div style="margin-top: 12px;">
+              <span style="font-size: 13px; color: var(--text-muted);">$1 USD =</span>
+              <div class="rate-val" id="live-sell-display">184.97 <small style="font-size:13px; color:var(--text-muted);">ETB</small></div>
+            </div>
+            <div style="margin-top: 12px; background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 10px; border: 1px dashed var(--danger);">
+              <div style="font-size: 12px; color: var(--danger); font-weight: bold;">💵 Qiimaha $100 USD:</div>
+              <div id="sell-100-display" style="font-size: 26px; font-weight: bold; color: #ef4444;">18,497 ETB</div>
+            </div>
           </div>
         </div>
 
-        <!-- DYNAMIC HISTORY GRAPH -->
         <div class="card">
-          <h3>📊 Interactive Rate Graph (7 Days History)</h3>
-          <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Jaantuskan wuxuu si toos ah u muujinayaa siday 7-dii maalmood ee u dambaysay qiimuhu u kaceen ama u dhaceen.</p>
+          <h3>📊 Dynamic Live Rate Graph</h3>
           <div style="height: 280px;">
             <canvas id="rateHistoryChart"></canvas>
           </div>
         </div>
 
-        <!-- AI CHAT -->
         <div class="card">
-          <h3>🧠 Caawiyaha Sarifle AI (Interactive Smart Assistant)</h3>
+          <h3>🤖 Caawiyaha Gemini AI Exchange System</h3>
           <div class="chat-box" id="chat-box">
-            <div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha caqliga badan ee Sarifle. Wax kasta oo ku saabsan sarifka, xisaabinta lacagaha, ama akoonnada bangiga naga su'aal! 😊</div>
+            <div class="chat-msg ai-msg">Asc! Waxaan ahay Gemini AI caawiyaha **Sarifle App**. Sheeg adeegga aad rabto (e.g. Coopay-Ebirr, Kaafi Ebirr, Telebirr, CBE, EVC Plus, Zaad, Sahal, eDahab, Premier Bank, Binance, Pyypl, Perfect Money)! 🚀</div>
           </div>
           <div style="display: flex; gap: 10px;">
-            <input type="text" id="user-input" placeholder="Qayd qor ama weydiiso AI-ga su'aal..." onkeypress="if(event.key==='Enter') sendAIMessage()">
-            <button onclick="sendAIMessage()" class="btn-action" style="width:auto; padding:0 25px;">Qor & Dir</button>
+            <input type="text" id="user-input" placeholder="Qor shirkadda ama adeegga aad rabto..." onkeypress="if(event.key==='Enter') sendGeminiAIMessage()">
+            <button onclick="sendGeminiAIMessage()" class="btn-action" style="width:auto; padding:0 25px;">Sii Dir</button>
           </div>
         </div>
       </div>
 
-      <!-- SECTION 3: SETTINGS & BIOMETRICS -->
+      <!-- SECTION 3: SETTINGS -->
       <div id="sec-settings" style="display: none;">
         <h2>⚙️ Amniga & Push Notifications</h2>
         <div class="card">
           <h3>🔔 System Mobile Notifications</h3>
-          <p style="font-size:14px; color:var(--text-muted);">Shid ogeysiisyada tooska ah si aad taleefankaaga ugu hesho qiimaha maanta la beddelo (Sida Facebook Notification).</p>
           <button onclick="requestNotificationPermission()" class="btn-action" style="width:auto; background:var(--accent); color:#000;">🔔 Shid Notification-ka Mobile-ka</button>
         </div>
-
         <div class="card">
           <h3>👆 Biometric Fingerprint Lock</h3>
-          <p style="font-size:14px; color:var(--text-muted);">Shid ama ka dami Fingerprint-ka si aad telefoonkaaga ugu soo gasho si dhakhso ah.</p>
           <button onclick="toggleFingerprintSetting()" id="btn-toggle-bio" class="btn-action" style="width:auto; background:var(--primary);">Shid Fingerprint Lock</button>
         </div>
       </div>
@@ -362,34 +361,121 @@
       <!-- SECTION 4: SUPER ADMIN -->
       <div id="sec-admin-panel" style="display: none;">
         <h2>👑 Super Admin Management Panel</h2>
-        
-        <!-- ACTIVE ONLINE STATS -->
         <div class="rate-box-grid">
           <div class="rate-card" style="border-color: var(--admin-color);">
-            <div style="color:var(--text-muted); font-size:13px;">👥 DADKA ONLINE-KA AH (LIVE)</div>
+            <div style="color:var(--text-muted); font-size:13px;">👥 DADKA ONLINE-KA AH</div>
             <div class="rate-val" id="active-online-count" style="color: var(--success);">0</div>
-            <span class="rate-badge pulse-green">● Real-time Monitor</span>
           </div>
+        </div>
+
+        <!-- QAANADA MAAMULKA AKOONNADA SHIRKADAHA (Somalia + Ethiopia + Global) -->
+        <div class="card" style="border-left: 5px solid var(--accent);">
+          <h3>🏦 QAANADA MAAMULKA AKOONNADA SHIRKADAHA (Somalia, Ethiopia & Global)</h3>
+          <p style="font-size:13px; color:var(--text-muted);">Halkan ku qor akoonnada shirkadaha aad isticmaasho (Coopay-Ebirr, Kaafi Ebirr, Telebirr, CBE, Awash, EVC Plus, Zaad, Sahal, eDahab, Bankiyada Soomaaliya, Binance, Pyypl, Perfect Money). AI-gu si toos ah ayuu ugu jawaabi doonaa macmiilka!</p>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:12px; margin-top:10px;">
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🇪🇹 Coopay-Ebirr (Coop Bank):</label>
+              <input type="text" id="adminAccCoopay" placeholder="09xxxxxxx / Acc: Coopay">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🇪🇹 Kaafi Ebirr Account:</label>
+              <input type="text" id="adminAccKaafi" placeholder="09xxxxxxx / Kaafi Ebirr">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">💳 Telebirr Account:</label>
+              <input type="text" id="adminAccTelebirr" placeholder="0915145197 (Telebirr)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🏦 CBE Bank Account:</label>
+              <input type="text" id="adminAccCBE" placeholder="1000123456789 (CBE)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🏦 Awash Bank Account:</label>
+              <input type="text" id="adminAccAwash" placeholder="01320999888700 (Awash)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🇸🇴 EVC Plus (Hormuud):</label>
+              <input type="text" id="adminAccEVC" placeholder="061xxxxxxx (EVC Account)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🇸🇴 Zaad Service (Telesom):</label>
+              <input type="text" id="adminAccZaad" placeholder="063xxxxxxx (Zaad Account)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🇸🇴 Sahal Service (Golis):</label>
+              <input type="text" id="adminAccSahal" placeholder="069xxxxxxx (Sahal Account)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🇸🇴 eDahab (Somtel):</label>
+              <input type="text" id="adminAcceDahab" placeholder="062xxxxxxx (eDahab Account)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🏦 Premier Bank / Bankiyada Somalia:</label>
+              <input type="text" id="adminAccPremier" placeholder="Acc: 203004005 (Premier/Salaam)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">🌐 Binance Pay ID:</label>
+              <input type="text" id="adminAccBinance" placeholder="sarifle@pay.binance (ID: 88776655)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">💳 Pyypl Account:</label>
+              <input type="text" id="adminAccPyypl" placeholder="+251915145197 (Pyypl)">
+            </div>
+            <div>
+              <label style="font-size:12px; color:var(--accent);">💵 Perfect Money USD:</label>
+              <input type="text" id="adminAccPerfect" placeholder="U12345678 (Perfect Money)">
+            </div>
+          </div>
+          <button onclick="saveCompanyAccounts()" class="btn-action" style="background:var(--accent); color:#000; margin-top:15px; width:auto; padding:10px 25px;">💾 Kaydi Akoonnada Shirkadaha Buuxa</button>
+        </div>
+
+        <!-- VERIFICATION TRANSACTIONS FROM AI -->
+        <div class="card" style="border-left: 5px solid var(--success);">
+          <h3>📥 Rasiidhada & Codsiyada AI-ga ka soo dhacay (Pending Verification)</h3>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Macmiilka</th>
+                  <th>Telefoonka</th>
+                  <th>Shirkada/Bank-ga</th>
+                  <th>Rasiidka (Sawir)</th>
+                  <th>Number-ka Lacagta Loo Celinayo</th>
+                  <th>Taariikhda</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="admin-receipts-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" style="border-left: 5px solid var(--accent);">
+          <h3>🔍 Raadi Xogta Xubinta</h3>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="searchUserPhone" placeholder="Geli Number-ka Macmiilka">
+            <button onclick="searchUserProfile()" class="btn-action" style="width:auto; padding:0 20px;">🔍 Raadi</button>
+          </div>
+          <div id="search-result-display" style="margin-top:15px;"></div>
         </div>
 
         <div class="card" style="border-left: 5px solid var(--admin-color);">
-          <h3>⚙️ Maamul Qiimaha Sarifka ee Labada Gacmood</h3>
-          <p style="font-size:12px; color:var(--text-muted);">Markaad halkaan ka beddesho, dhammaan macmiisha taleefamadooda wuxuu ugu dhacayaa <b>Push Notification</b> si toos ah!</p>
+          <h3>⚙️ Maamul Qiimaha Sarifka</h3>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-top:10px;">
             <div>
-              <label>WE BUY Rate (ETB):</label>
-              <input type="number" id="adminBuyRate" placeholder="e.g. 183">
+              <label>WE BUY Rate:</label>
+              <input type="number" id="adminBuyRate" placeholder="e.g. 184.08">
             </div>
             <div>
-              <label>WE SELL Rate (ETB):</label>
-              <input type="number" id="adminSellRate" placeholder="e.g. 283">
+              <label>WE SELL Rate:</label>
+              <input type="number" id="adminSellRate" placeholder="e.g. 184.97">
             </div>
           </div>
-          <button onclick="updateGlobalRates()" class="btn-action" style="background:var(--admin-color); margin-top:15px; width:auto; padding:10px 25px;">💾 Kaydi & U Dir Push Notification Dhammaan Dadka</button>
+          <button onclick="updateGlobalRates()" class="btn-action" style="background:var(--admin-color); margin-top:15px; width:auto; padding:10px 25px;">💾 Kaydi Qiimaha Sarifka</button>
         </div>
 
         <div class="card">
-          <h3>👥 Dhammaan Isticmaaleyaasha Nidaamka (Real-Time Presence)</h3>
+          <h3>👥 Dhammaan Isticmaaleyaasha Nidaamka</h3>
           <div class="table-container">
             <table class="data-table">
               <thead>
@@ -398,8 +484,8 @@
                   <th>Magaca Buuxa</th>
                   <th>Phone Number</th>
                   <th>PIN</th>
-                  <th>Aaladda (Device ID)</th>
-                  <th>Admin Action (Remote Access)</th>
+                  <th>Digital ID</th>
+                  <th>Admin Action</th>
                 </tr>
               </thead>
               <tbody id="admin-users-body"></tbody>
@@ -407,11 +493,14 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
   <script>
+    // GEMINI API KEY CONFIGURATION
+    const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY_HERE";
+
+    // FIREBASE INITIALIZATION
     const firebaseConfig = { databaseURL: "https://safirle-default-rtdb.firebaseio.com/" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -419,9 +508,28 @@
     const SUPER_ADMIN_PHONE = "0915145197";
     const SUPER_ADMIN_PIN = "9869";
 
+    // DEFAULT COMPANY ACCOUNTS INCLUDING COOPAY EBIRR & KAAFI EBIRR
+    let COMPANY_ACCOUNTS = {
+      "COOPAY EBIRR": "0915145197 (Sarifle Coopay-Ebirr Account)",
+      "KAAFI EBIRR": "0915145197 (Sarifle Kaafi Ebirr Account)",
+      "TELEBIRR": "0915145197 (Sarifle Telebirr Account)",
+      "CBE": "1000123456789 (Sarifle Commercial Bank)",
+      "AWASH": "01320999888700 (Sarifle Awash Bank)",
+      "EVC PLUS": "0615000000 (Sarifle EVC Plus)",
+      "ZAAD": "0634000000 (Sarifle Zaad Service)",
+      "SAHAL": "0699000000 (Sarifle Sahal Service)",
+      "EDAHAB": "0627000000 (Sarifle eDahab)",
+      "PREMIER BANK": "203004005 (Sarifle Premier Bank)",
+      "BINANCE": "sarifle@pay.binance (Binance Pay ID: 88776655)",
+      "PYYPL": "+251915145197 (Pyypl Account)",
+      "PERFECT MONEY": "U12345678 (Perfect Money USD)"
+    };
+
     let currentUser = null; 
-    let currentBuyRate = 183.00;
-    let currentSellRate = 283.00;
+    let currentBuyRate = 184.08;
+    let currentSellRate = 184.97;
+    let prevBuyRate = 184.08;
+    let prevSellRate = 184.97;
     let rateChart = null;
 
     let regData = { fullName: "", phone: "", pin: "" };
@@ -429,32 +537,27 @@
     window.addEventListener("DOMContentLoaded", () => {
       checkDeviceState();
       listenGlobalSettings();
+      listenCompanyAccounts();
       initRateChart();
+      autoFillRate();
       startAutoFluctuatingRates();
       requestNotificationPermission();
     });
 
-    // PUSH NOTIFICATIONS SYSTEM
     function requestNotificationPermission() {
       if ("Notification" in window) {
         Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            console.log("Notification permission granted!");
-          }
+          if (permission === "granted") console.log("Notification allowed!");
         });
       }
     }
 
     function triggerPushNotification(title, body) {
       if ("Notification" in window && Notification.permission === "granted") {
-        new Notification(title, {
-          body: body,
-          icon: "https://cdn-icons-png.flaticon.com/512/2099/2099058.png"
-        });
+        new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/2099/2099058.png" });
       }
     }
 
-    // NAVIGATION SYSTEM
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('hide');
     }
@@ -471,7 +574,6 @@
       document.getElementById('btn-' + secId).classList.add('active');
     }
 
-    // SMART DEVICE STATE ROUTING & ONLINE TRACKING
     function checkDeviceState() {
       const isRegistered = localStorage.getItem("sarifle_device_registered");
       const activeUser = localStorage.getItem("sarifle_active_user");
@@ -519,40 +621,46 @@
       document.getElementById("login-box").style.display = "block";
     }
 
-    // STRICT REGISTRATION STEP-BY-STEP VALIDATIONS
     function validateStepName() {
       const name = document.getElementById("regFullName").value.trim();
-      if (!name || name.length < 3) return alert("⚠️ Fadlan geli magacaaga buuxa ee saxda ah!");
+      if (!name || name.length < 3) return alert("⚠️ Fadlan geli magacaaga buuxa!");
       regData.fullName = name;
       nextWizardStep('step-phone');
     }
 
     function validateStepPhone() {
       const phoneInput = document.getElementById("regPhone").value.trim();
-      if (!/^\d{8}$/.test(phoneInput)) return alert("⚠️ Fadlan geli sagaalka (8) digit ee hubaal ka dib +2519...!");
-      regData.phone = "09" + phoneInput;
+      if (!phoneInput || phoneInput.length < 6) return alert("⚠️ Fadlan geli number sax ah!");
+      regData.phone = phoneInput;
       nextWizardStep('step-pin');
     }
 
     function validateStepPin() {
       const pin = document.getElementById("regPin").value.trim();
-      if (!/^\d{4}$/.test(pin)) return alert("⚠️ PIN-ku waa inuu yahay 4 digit oo nambar ah!");
+      if (!/^\d{4}$/.test(pin)) return alert("⚠️ PIN-ku waa inuu yahay 4 digit!");
       regData.pin = pin;
       nextWizardStep('step-confirm-pin');
     }
 
     function handleCompleteSignup() {
       const confirmPin = document.getElementById("regConfirmPin").value.trim();
-      if (confirmPin !== regData.pin) return alert("⚠️ PIN-ka aad ku celisay ma meel dhaco! Dib u eeg.");
+      if (confirmPin !== regData.pin) return alert("⚠️ PIN-ku ma meel dhaco!");
 
-      const deviceId = "DEV-" + Math.random().toString(36).substring(2, 9);
+      const digitalId = "ID-" + Math.floor(100000 + Math.random() * 900000);
 
       db.ref("users/" + regData.phone).once("value", (snapshot) => {
         if (snapshot.exists()) {
-          alert("Nambarkan horay ayaa loo diiwaan geliyay! Fadlan Soo Gal.");
+          alert("Nambarkan horay ayaa loo diiwaan geliyay!");
           goToLogin();
         } else {
-          const newUser = { fullName: regData.fullName, phone: regData.phone, pin: regData.pin, registeredDevice: deviceId, createdAt: Date.now() };
+          const newUser = { 
+            fullName: regData.fullName, 
+            phone: regData.phone, 
+            pin: regData.pin, 
+            digitalId: digitalId, 
+            isBanned: false,
+            createdAt: Date.now() 
+          };
           db.ref("users/" + regData.phone).set(newUser).then(() => {
             currentUser = newUser;
             localStorage.setItem("sarifle_device_registered", "true");
@@ -565,8 +673,7 @@
     }
 
     function handleLogin() {
-      const phoneRaw = document.getElementById('loginPhone').value.trim();
-      const phone = "09" + phoneRaw;
+      const phone = document.getElementById('loginPhone').value.trim();
       const pin = document.getElementById('loginPin').value.trim();
 
       if (phone === SUPER_ADMIN_PHONE && pin === SUPER_ADMIN_PIN) {
@@ -579,367 +686,528 @@
 
       db.ref("users/" + phone).once("value", (snapshot) => {
         const userData = snapshot.val();
-        if (userData && userData.pin === pin) {
-          currentUser = userData;
-          localStorage.setItem("sarifle_device_registered", "true");
-          localStorage.setItem("sarifle_active_user", JSON.stringify(currentUser));
-          setupUserInterface();
-        } else {
-          alert("Telefoonka ama PIN-ka ayaa khaldan!");
-        }
+        if (userData) {
+          if (userData.isBanned) return alert("⛔ Akoonkaaga waa la ganaaxay (Banned).");
+          if (userData.pin === pin) {
+            currentUser = userData;
+            localStorage.setItem("sarifle_device_registered", "true");
+            localStorage.setItem("sarifle_active_user", JSON.stringify(currentUser));
+            setupUserInterface();
+          } else alert("⚠️ PIN-ka aad gelisay waa kii ugu qaldanaa!");
+        } else alert("⚠️ Ma jiro akoon ku diiwaan gashan nambarkan!");
       });
     }
 
     function setupUserInterface() {
-      document.getElementById('auth-screen').style.display = 'none';
-      document.getElementById('user-display-name').innerText = (currentUser.isAdmin ? "👑 " : "👤 ") + currentUser.fullName;
-      
+      document.getElementById("auth-screen").style.display = "none";
+      document.getElementById("user-display-name").innerText = currentUser.fullName;
+
       setupOnlinePresence();
-
-      if(currentUser.isAdmin) {
-        document.getElementById('btn-admin-panel').style.display = 'block';
-        loadAdminUsersList();
-        monitorOnlineUsersCount();
-      }
-
       loadUserTransactions();
-      loadUserAIChatHistory();
-      autoFillRate();
-      updateBioButtonState();
+
+      if (currentUser.isAdmin) {
+        document.getElementById("btn-admin-panel").style.display = "block";
+        loadAdminPanelData();
+      }
     }
 
     function handleLogout() {
-      if (currentUser) {
-        db.ref("presence/" + currentUser.phone).set({ state: "offline", lastChanged: firebase.database.ServerValue.TIMESTAMP });
-      }
-      currentUser = null;
       localStorage.removeItem("sarifle_active_user");
-      document.getElementById('auth-screen').style.display = 'flex';
-      checkDeviceState();
+      location.reload();
     }
 
-    // INTERACTIVE RATE HISTORY GRAPH
-    function initRateChart() {
-      const ctx = document.getElementById('rateHistoryChart').getContext('2d');
-      rateChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
-          datasets: [
-            { label: 'WE BUY Rate (ETB)', data: [180, 181, 180.5, 182, 182.5, 183, 183], borderColor: '#10b981', tension: 0.4 },
-            { label: 'WE SELL Rate (ETB)', data: [278, 279, 280, 281, 281.5, 282, 283], borderColor: '#ef4444', tension: 0.4 }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } } }
-      });
+    function toggleFingerprintSetting() {
+      const currentVal = localStorage.getItem("sarifle_bio_enabled") === "true";
+      localStorage.setItem("sarifle_bio_enabled", (!currentVal).toString());
+      alert(`Fingerprint lock: ${!currentVal ? 'Saa loo shiday!' : 'Saa loo damiyay!'}`);
     }
 
-    // AUTO FLUCTUATING RATES
+    function triggerBiometricAuth() {
+      if (window.PublicKeyCredential) {
+        alert("👆 Faraha saar skreenka si loo xaqiijiyo (Biometric Simulated)...");
+        const activeUser = localStorage.getItem("sarifle_active_user");
+        if(activeUser) {
+          currentUser = JSON.parse(activeUser);
+          setupUserInterface();
+        }
+      } else {
+        alert("Sifada fingerprint-ka ma taageerto birawsarkani!");
+      }
+    }
+
     function startAutoFluctuatingRates() {
       setInterval(() => {
-        const randomBuyDelta = (Math.random() * 0.2 - 0.1).toFixed(2);
-        const randomSellDelta = (Math.random() * 0.2 - 0.1).toFixed(2);
+        prevBuyRate = currentBuyRate;
+        prevSellRate = currentSellRate;
 
-        let liveBuy = (parseFloat(currentBuyRate) + parseFloat(randomBuyDelta)).toFixed(2);
-        let liveSell = (parseFloat(currentSellRate) + parseFloat(randomSellDelta)).toFixed(2);
+        const deltaBuy = (Math.random() - 0.48) * 0.15;
+        const deltaSell = (Math.random() - 0.48) * 0.15;
 
-        document.getElementById("live-buy-display").innerHTML = `${liveBuy} <small style="font-size:14px; color:var(--text-muted);">ETB</small>`;
-        document.getElementById("live-sell-display").innerHTML = `${liveSell} <small style="font-size:14px; color:var(--text-muted);">ETB</small>`;
-      }, 4000);
+        currentBuyRate = parseFloat((currentBuyRate + deltaBuy).toFixed(2));
+        currentSellRate = parseFloat((currentSellRate + deltaSell).toFixed(2));
+
+        updateUIAndChartWithDynamicAnimation();
+      }, 3000);
     }
 
-    // PDF RECEIPT GENERATION
-    function generatePDFReceipt(type, amountUSD, rate, totalETB, date) {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+    function updateUIAndChartWithDynamicAnimation() {
+      document.getElementById("live-buy-display").innerText = currentBuyRate + " ETB";
+      document.getElementById("live-sell-display").innerText = currentSellRate + " ETB";
 
-      doc.setFillColor(15, 23, 42);
-      doc.rect(0, 0, 210, 40, 'F');
-      
-      doc.setTextColor(56, 189, 248);
-      doc.setFontSize(22);
-      doc.text("SARIFLE PORTAL RECEIPT", 20, 25);
+      document.getElementById("buy-100-display").innerText = (currentBuyRate * 100).toLocaleString() + " ETB";
+      document.getElementById("sell-100-display").innerText = (currentSellRate * 100).toLocaleString() + " ETB";
 
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(12);
-      doc.text(`Macmiilka: ${currentUser.fullName}`, 20, 55);
-      doc.text(`Phone: ${currentUser.phone}`, 20, 65);
-      doc.text(`Taariikhda: ${date}`, 20, 75);
+      const buyBadge = document.getElementById("buy-badge");
+      const buyArrow = document.getElementById("buy-arrow");
+      const buyStatusText = document.getElementById("buy-status-text");
 
-      doc.setLineWidth(0.5);
-      doc.line(20, 85, 190, 85);
+      if (currentBuyRate >= prevBuyRate) {
+        buyBadge.className = "trend-indicator trend-up";
+        buyArrow.className = "arrow-anim-up";
+        buyArrow.innerText = "▲";
+        buyStatusText.innerText = "Sare u kac";
+      } else {
+        buyBadge.className = "trend-indicator trend-down";
+        buyArrow.className = "arrow-anim-down";
+        buyArrow.innerText = "▼";
+        buyStatusText.innerText = "Hoos u dhac";
+      }
 
-      doc.setFontSize(14);
-      doc.text(`Nooca Sarifka: ${type}`, 20, 100);
-      doc.text(`Amount (USD): $${amountUSD}`, 20, 112);
-      doc.text(`Exchange Rate: ${rate} ETB`, 20, 124);
-      doc.text(`Total Local (ETB): ${totalETB} ETB`, 20, 136);
+      const sellBadge = document.getElementById("sell-badge");
+      const sellArrow = document.getElementById("sell-arrow");
+      const sellStatusText = document.getElementById("sell-status-text");
 
-      doc.save(`Sarifle_Receipt_${Date.now()}.pdf`);
-    }
+      if (currentSellRate >= prevSellRate) {
+        sellBadge.className = "trend-indicator trend-up";
+        sellArrow.className = "arrow-anim-up";
+        sellArrow.innerText = "▲";
+        sellStatusText.innerText = "Sare u kac";
+      } else {
+        sellBadge.className = "trend-indicator trend-down";
+        sellArrow.className = "arrow-anim-down";
+        sellArrow.innerText = "▼";
+        sellStatusText.innerText = "Hoos u dhac";
+      }
 
-    function loadUserTransactions() {
-      if(!currentUser) return;
-      db.ref("user_transactions/" + currentUser.phone).on("value", (snapshot) => {
-        const tbody = document.getElementById("sheet-body");
-        tbody.innerHTML = "";
-        const data = snapshot.val();
-        if (data) {
-          let index = 1;
-          Object.keys(data).forEach((key) => {
-            const item = data[key];
-            const dateStr = new Date(item.createdAt).toLocaleDateString();
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${index++}</td>
-              <td><span class="${item.type === 'BUY' ? 'badge-buy' : 'badge-sell'}">${item.type}</span></td>
-              <td>$${Number(item.amountUSD).toLocaleString()}</td>
-              <td>${Number(item.exchangeRate).toLocaleString()} ETB</td>
-              <td><strong>${Number(item.totalLocal).toLocaleString()} ETB</strong></td>
-              <td>${dateStr}</td>
-              <td><button class="btn-pdf" onclick="generatePDFReceipt('${item.type}', '${item.amountUSD}', '${item.exchangeRate}', '${item.totalLocal}', '${dateStr}')">📄 PDF Receipt</button></td>
-              <td><button onclick="deleteRow('${key}')" style="color:red; border:none; background:none; cursor:pointer;">🗑️ Delete</button></td>
-            `;
-            tbody.appendChild(row);
-          });
-        }
-      });
-    }
+      if (rateChart) {
+        rateChart.data.datasets[0].data.shift();
+        rateChart.data.datasets[0].data.push(currentBuyRate);
 
-    function handleAddRow(e) {
-      e.preventDefault();
-      if(!currentUser) return;
+        rateChart.data.datasets[1].data.shift();
+        rateChart.data.datasets[1].data.push(currentSellRate);
 
-      const type = document.getElementById("transType").value;
-      const usd = Number(document.getElementById("amountUSD").value);
-      const defaultRate = (type === "BUY") ? currentBuyRate : currentSellRate;
-      const rate = Number(document.getElementById("exRate").value) || defaultRate;
-
-      db.ref("user_transactions/" + currentUser.phone).push({
-        type: type, amountUSD: usd, exchangeRate: rate, totalLocal: usd * rate, createdAt: Date.now()
-      });
-      document.getElementById("entry-form").reset();
-      autoFillRate();
-    }
-
-    function deleteRow(key) {
-      if (confirm("Ma ziidayaa in aad tirto safkan?")) {
-        db.ref("user_transactions/" + currentUser.phone + "/" + key).remove();
+        rateChart.update('active');
       }
     }
 
     function autoFillRate() {
       const type = document.getElementById("transType").value;
-      document.getElementById("exRate").value = (type === "BUY") ? currentBuyRate : currentSellRate;
+      document.getElementById("exRate").value = type === "BUY" ? currentBuyRate : currentSellRate;
+    }
+
+    function handleAddRow(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const type = document.getElementById("transType").value;
+      const amountUSD = parseFloat(document.getElementById("amountUSD").value);
+      const exRate = parseFloat(document.getElementById("exRate").value);
+      const totalETB = amountUSD * exRate;
+
+      const newTx = { type, amountUSD, exRate, totalETB, timestamp: Date.now() };
+
+      db.ref("transactions/" + currentUser.phone).push(newTx).then(() => {
+        document.getElementById("entry-form").reset();
+        autoFillRate();
+      });
+    }
+
+    function loadUserTransactions() {
+      if (!currentUser) return;
+      db.ref("transactions/" + currentUser.phone).on("value", (snapshot) => {
+        const tbody = document.getElementById("sheet-body");
+        tbody.innerHTML = "";
+        let count = 1;
+
+        snapshot.forEach((childSnap) => {
+          const tx = childSnap.val();
+          const key = childSnap.key;
+          const date = new Date(tx.timestamp).toLocaleString("so-SO");
+
+          const row = `
+            <tr>
+              <td>${count++}</td>
+              <td><span class="${tx.type === 'BUY' ? 'badge-buy' : 'badge-sell'}">${tx.type}</span></td>
+              <td>$${tx.amountUSD.toFixed(2)}</td>
+              <td>${tx.exRate}</td>
+              <td><b>${tx.totalETB.toLocaleString()}</b></td>
+              <td>${date}</td>
+              <td><button class="btn-pdf" onclick="generatePDF('${tx.type}', ${tx.amountUSD}, ${tx.exRate}, ${tx.totalETB}, '${date}')">📄 Receipt</button></td>
+              <td><button style="background:var(--danger); color:white; border:none; border-radius:4px; cursor:pointer;" onclick="deleteTx('${key}')">🗑️</button></td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      });
+    }
+
+    function deleteTx(key) {
+      if (confirm("Ma hubtaa inaad tirtirto transaction-kan?")) {
+        db.ref("transactions/" + currentUser.phone + "/" + key).remove();
+      }
+    }
+
+    function generatePDF(type, usd, rate, total, date) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(20);
+      doc.setTextColor(37, 99, 235);
+      doc.text("SARIFLE APP PORTAL", 20, 20);
+
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text(`Rasiidhka Isdhaafsiga: ${type}`, 20, 35);
+      doc.text(`Macmiilka: ${currentUser.fullName}`, 20, 45);
+      doc.text(`Telefoonka: ${currentUser.phone}`, 20, 55);
+      doc.text(`Taariikhda: ${date}`, 20, 65);
+
+      doc.line(20, 72, 190, 72);
+
+      doc.text(`Lacagta USD: $${usd.toFixed(2)}`, 20, 85);
+      doc.text(`Rate-ka: ${rate}`, 20, 95);
+      doc.setFontSize(14);
+      doc.text(`Wadarta Guud: ${total.toLocaleString()}`, 20, 110);
+
+      doc.save(`Sarifle_Receipt_${Date.now()}.pdf`);
     }
 
     function listenGlobalSettings() {
-      db.ref("system_settings").on("value", (snapshot) => {
-        if(snapshot.exists()) {
-          const settings = snapshot.val();
-          let changed = false;
+      db.ref("global_rates").on("value", (snapshot) => {
+        const rates = snapshot.val();
+        if (rates) {
+          prevBuyRate = currentBuyRate;
+          prevSellRate = currentSellRate;
 
-          if(settings.buyRate && settings.buyRate !== currentBuyRate) {
-            currentBuyRate = settings.buyRate;
-            changed = true;
-          }
-          if(settings.sellRate && settings.sellRate !== currentSellRate) {
-            currentSellRate = settings.sellRate;
-            changed = true;
-          }
+          currentBuyRate = rates.buy || 184.08;
+          currentSellRate = rates.sell || 184.97;
 
+          updateUIAndChartWithDynamicAnimation();
           autoFillRate();
+        }
+      });
+    }
 
-          // Push Notification Trigger when rates update!
-          if (changed) {
-            triggerPushNotification("⚡ Qiimaha Sarifka Waa La Beddelay!", `BUY: ${currentBuyRate} ETB | SELL: ${currentSellRate} ETB`);
+    // LISTEN & SAVE DYNAMIC COMPANY ACCOUNTS IN FIREBASE
+    function listenCompanyAccounts() {
+      db.ref("company_accounts").on("value", (snapshot) => {
+        const accs = snapshot.val();
+        if (accs) {
+          COMPANY_ACCOUNTS = accs;
+          // Pre-fill Admin Inputs if Admin Panel is open
+          if (document.getElementById("adminAccCoopay")) {
+            document.getElementById("adminAccCoopay").value = accs["COOPAY EBIRR"] || "";
+            document.getElementById("adminAccKaafi").value = accs["KAAFI EBIRR"] || "";
+            document.getElementById("adminAccTelebirr").value = accs["TELEBIRR"] || "";
+            document.getElementById("adminAccCBE").value = accs["CBE"] || "";
+            document.getElementById("adminAccAwash").value = accs["AWASH"] || "";
+            document.getElementById("adminAccEVC").value = accs["EVC PLUS"] || "";
+            document.getElementById("adminAccZaad").value = accs["ZAAD"] || "";
+            document.getElementById("adminAccSahal").value = accs["SAHAL"] || "";
+            document.getElementById("adminAcceDahab").value = accs["EDAHAB"] || "";
+            document.getElementById("adminAccPremier").value = accs["PREMIER BANK"] || "";
+            document.getElementById("adminAccBinance").value = accs["BINANCE"] || "";
+            document.getElementById("adminAccPyypl").value = accs["PYYPL"] || "";
+            document.getElementById("adminAccPerfect").value = accs["PERFECT MONEY"] || "";
           }
         }
+      });
+    }
+
+    function saveCompanyAccounts() {
+      const accs = {
+        "COOPAY EBIRR": document.getElementById("adminAccCoopay").value.trim() || COMPANY_ACCOUNTS["COOPAY EBIRR"],
+        "KAAFI EBIRR": document.getElementById("adminAccKaafi").value.trim() || COMPANY_ACCOUNTS["KAAFI EBIRR"],
+        "TELEBIRR": document.getElementById("adminAccTelebirr").value.trim() || COMPANY_ACCOUNTS["TELEBIRR"],
+        "CBE": document.getElementById("adminAccCBE").value.trim() || COMPANY_ACCOUNTS["CBE"],
+        "AWASH": document.getElementById("adminAccAwash").value.trim() || COMPANY_ACCOUNTS["AWASH"],
+        "EVC PLUS": document.getElementById("adminAccEVC").value.trim() || COMPANY_ACCOUNTS["EVC PLUS"],
+        "ZAAD": document.getElementById("adminAccZaad").value.trim() || COMPANY_ACCOUNTS["ZAAD"],
+        "SAHAL": document.getElementById("adminAccSahal").value.trim() || COMPANY_ACCOUNTS["SAHAL"],
+        "EDAHAB": document.getElementById("adminAcceDahab").value.trim() || COMPANY_ACCOUNTS["EDAHAB"],
+        "PREMIER BANK": document.getElementById("adminAccPremier").value.trim() || COMPANY_ACCOUNTS["PREMIER BANK"],
+        "BINANCE": document.getElementById("adminAccBinance").value.trim() || COMPANY_ACCOUNTS["BINANCE"],
+        "PYYPL": document.getElementById("adminAccPyypl").value.trim() || COMPANY_ACCOUNTS["PYYPL"],
+        "PERFECT MONEY": document.getElementById("adminAccPerfect").value.trim() || COMPANY_ACCOUNTS["PERFECT MONEY"]
+      };
+
+      db.ref("company_accounts").set(accs).then(() => {
+        alert("✨ Akoonnada Coopay, Kaafi Ebirr iyo shirkadaha oo dhan waa la kaydiyay!");
       });
     }
 
     function updateGlobalRates() {
-      const buyRate = Number(document.getElementById("adminBuyRate").value);
-      const sellRate = Number(document.getElementById("adminSellRate").value);
-      if(!buyRate || !sellRate) return alert("Geli labada Rate ee saxda ah!");
+      const buy = parseFloat(document.getElementById("adminBuyRate").value);
+      const sell = parseFloat(document.getElementById("adminSellRate").value);
 
-      db.ref("system_settings").update({ buyRate: buyRate, sellRate: sellRate }).then(() => {
-        alert("Qiimaha waa la kaydiyay, dhammaan macmiisha notification ayaa u dhacay!");
+      if (!buy || !sell) return alert("Geli qiimaha saxda ah!");
+
+      db.ref("global_rates").set({ buy, sell }).then(() => {
+        alert("Qiimaha guud waa la cusbooneysiiyay!");
+        triggerPushNotification("Sarifle App Update", `Qiimaha Sarifka ee maanta waa la beddelay! BUY: ${buy} | SELL: ${sell}`);
       });
     }
 
-    // SUPER ADMIN ONLINE MONITORING & PRIVATE USER LOGIN
-    function monitorOnlineUsersCount() {
-      db.ref("presence").on("value", (snapshot) => {
-        const presenceData = snapshot.val();
-        let count = 0;
-        if(presenceData) {
-          Object.keys(presenceData).forEach(key => {
-            if(presenceData[key].state === "online") count++;
-          });
-        }
-        document.getElementById("active-online-count").innerText = count;
+    function loadAdminPanelData() {
+      db.ref("presence").on("value", (snap) => {
+        let activeCount = 0;
+        snap.forEach(child => {
+          if (child.val().state === "online") activeCount++;
+        });
+        document.getElementById("active-online-count").innerText = activeCount;
       });
-    }
 
-    function loadAdminUsersList() {
-      db.ref("users").on("value", (usersSnap) => {
-        db.ref("presence").on("value", (presenceSnap) => {
-          const tbody = document.getElementById("admin-users-body");
-          tbody.innerHTML = "";
-          const users = usersSnap.val();
-          const presence = presenceSnap.val() || {};
+      db.ref("users").on("value", (snap) => {
+        const tbody = document.getElementById("admin-users-body");
+        tbody.innerHTML = "";
 
-          if(users) {
-            Object.keys(users).forEach(key => {
-              const u = users[key];
-              const userPresence = presence[u.phone] || { state: "offline" };
-              const isOnline = userPresence.state === "online";
+        snap.forEach(child => {
+          const u = child.val();
+          const row = `
+            <tr>
+              <td><span class="status-dot ${u.isBanned ? 'dot-red' : 'dot-green'}"></span> ${u.isBanned ? 'Banned' : 'Active'}</td>
+              <td>${u.fullName}</td>
+              <td>${u.phone}</td>
+              <td>${u.pin}</td>
+              <td>${u.digitalId || 'N/A'}</td>
+              <td>
+                <button class="btn-ban" onclick="toggleBanUser('${u.phone}', ${u.isBanned})">
+                  ${u.isBanned ? '🔓 Unlock' : '⛔ Ban'}
+                </button>
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      });
 
-              const row = document.createElement("tr");
-              row.innerHTML = `
-                <td>
-                  <span class="${isOnline ? 'status-online' : 'status-offline'}">
-                    <span class="status-dot ${isOnline ? 'dot-green' : 'dot-red'}"></span>
-                    ${isOnline ? 'Online (Wuu Ku Sugayaa)' : 'Offline'}
-                  </span>
-                </td>
-                <td>${u.fullName || '-'}</td>
-                <td>${u.phone}</td>
-                <td><strong>${u.pin}</strong></td>
-                <td><small>${u.registeredDevice || 'Unknown'}</small></td>
-                <td>
-                  <button class="btn-login-as" onclick="loginAsUserRemote('${u.phone}')">👤 Log in si Private ah</button>
-                </td>
-              `;
-              tbody.appendChild(row);
-            });
-          }
+      // LOAD RASIIDHADA IYO TRANSACTIONS-KA CUSUB EE AI-GA KA SOO DHACAY
+      db.ref("ai_proofs").on("value", (snap) => {
+        const tbody = document.getElementById("admin-receipts-body");
+        tbody.innerHTML = "";
+
+        snap.forEach(child => {
+          const p = child.val();
+          const key = child.key;
+          const date = new Date(p.timestamp).toLocaleString("so-SO");
+
+          const row = `
+            <tr>
+              <td><b>${p.userName}</b></td>
+              <td>${p.userPhone}</td>
+              <td><span style="color:var(--accent); font-weight:bold;">${p.company}</span></td>
+              <td>
+                <a href="${p.receiptImg}" target="_blank">
+                  <img src="${p.receiptImg}" style="width:60px; height:60px; border-radius:8px; border:1px solid #334155; object-fit:cover;">
+                </a>
+              </td>
+              <td><b style="color:var(--success);">${p.refundNumber}</b></td>
+              <td>${date}</td>
+              <td>
+                <button class="btn-pdf" onclick="approveProof('${key}')">✅ Ansixi</button>
+              </td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
         });
       });
     }
 
-    function loginAsUserRemote(phone) {
-      db.ref("users/" + phone).once("value", (snapshot) => {
-        const targetUser = snapshot.val();
-        if(targetUser) {
-          currentUser = targetUser;
-          localStorage.setItem("sarifle_active_user", JSON.stringify(currentUser));
-          alert(`👑 Admin: Waxaad si gaar ah (Private) ugu dhex gashay akoonka: ${currentUser.fullName}`);
-          setupUserInterface();
-          showSection('sarifka');
+    function approveProof(key) {
+      db.ref("ai_proofs/" + key).remove().then(() => {
+        alert("✅ Transaction-ka waa la ansixiyay!");
+      });
+    }
+
+    function toggleBanUser(phone, isBanned) {
+      db.ref("users/" + phone + "/isBanned").set(!isBanned);
+    }
+
+    function searchUserProfile() {
+      const query = document.getElementById("searchUserPhone").value.trim();
+      if (!query) return;
+
+      db.ref("users/" + query).once("value", (snap) => {
+        const u = snap.val();
+        const display = document.getElementById("search-result-display");
+
+        if (u) {
+          display.innerHTML = `
+            <div style="background:#0f172a; padding:15px; border-radius:10px;">
+              <h4>Magaca: ${u.fullName}</h4>
+              <p>Phone: ${u.phone} | ID: ${u.digitalId}</p>
+              <p>Status: ${u.isBanned ? '🔴 Banned' : '🟢 Active'}</p>
+            </div>
+          `;
+        } else {
+          display.innerHTML = "<p style='color:var(--danger);'>Wax xog ah ma soo bixin!</p>";
         }
       });
     }
 
-    // BIOMETRICS FINGERPRINT LOGIC
-    function toggleFingerprintSetting() {
-      const current = localStorage.getItem("sarifle_bio_enabled") === "true";
-      localStorage.setItem("sarifle_bio_enabled", (!current).toString());
-      updateBioButtonState();
-      alert(!current ? "👆 Fingerprint lock waa la shiday!" : "🔴 Fingerprint Lock waa la damiyay!");
-    }
-
-    function updateBioButtonState() {
-      const btn = document.getElementById("btn-toggle-bio");
-      const isEnabled = localStorage.getItem("sarifle_bio_enabled") === "true";
-      if(isEnabled) {
-        btn.innerText = "Dami Fingerprint Lock";
-        btn.style.background = "var(--danger)";
-      } else {
-        btn.innerText = "Shid Fingerprint Lock";
-        btn.style.background = "var(--primary)";
-      }
-    }
-
-    function triggerBiometricAuth() {
-      if (window.PublicKeyCredential) {
-        alert("👆 Dhig fartaada ama wajigaaga biometric sensor-ka...");
-        setTimeout(() => {
-          const activeUser = localStorage.getItem("sarifle_active_user");
-          if(activeUser) {
-            currentUser = JSON.parse(activeUser);
-            setupUserInterface();
-          } else {
-            alert("⚠️ Waa inaad mar uun PIN ku gashaa ka dib ku isticmaali kartaa Fingerprint.");
-          }
-        }, 1200);
-      } else {
-        alert("Aaladdan ma taageerto Biometric-ka.");
-      }
-    }
-
-    // SMART AI CHATBOT WITH TYPING INDICATOR & CLOUD PERSISTENCE
-    function loadUserAIChatHistory() {
-      if(!currentUser) return;
-      db.ref("ai_chats/" + currentUser.phone).on("value", (snapshot) => {
-        const chatBox = document.getElementById("chat-box");
-        chatBox.innerHTML = '<div class="chat-msg ai-msg">Asc! Waxaan ahay caawiyaha caqliga badan ee Sarifle. Wax kasta oo ku saabsan sarifka, xisaabinta lacagaha, ama akoonnada bangiga naga su\'aal! 😊</div>';
-        
-        const history = snapshot.val();
-        if(history) {
-          Object.keys(history).forEach(key => {
-            const msg = history[key];
-            const msgDiv = document.createElement("div");
-            msgDiv.className = `chat-msg ${msg.sender === 'user' ? 'user-msg' : 'ai-msg'}`;
-            msgDiv.innerText = msg.text;
-            chatBox.appendChild(msgDiv);
-          });
-          chatBox.scrollTop = chatBox.scrollHeight;
+    function initRateChart() {
+      const ctx = document.getElementById('rateHistoryChart').getContext('2d');
+      rateChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['10s Ago', '8s Ago', '6s Ago', '4s Ago', '2s Ago', '1s Ago', 'Now'],
+          datasets: [
+            { label: 'BUY Rate', data: [183.5, 183.8, 183.9, 184.0, 184.05, 184.08, currentBuyRate], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.1)', fill: true, tension: 0.4 },
+            { label: 'SELL Rate', data: [184.2, 184.4, 184.6, 184.7, 184.85, 184.90, currentSellRate], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.4 }
+          ]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false,
+          animation: { duration: 1000 }
         }
       });
     }
 
-    function sendAIMessage() {
+    // ADVANCED AI AUTOMATED PAYMENT FLOW INTEGRATION
+    async function sendGeminiAIMessage() {
       const input = document.getElementById("user-input");
-      const text = input.value.trim();
-      if(!text || !currentUser) return;
+      const query = input.value.trim();
+      if (!query) return;
 
       const chatBox = document.getElementById("chat-box");
-      
-      // Save User Message to Cloud DB
-      db.ref("ai_chats/" + currentUser.phone).push({
-        sender: "user", text: text, timestamp: Date.now()
-      });
-
+      chatBox.innerHTML += `<div class="chat-msg user-msg">${query}</div>`;
       input.value = "";
 
-      // Typing Indicator Animation
-      const typingDiv = document.createElement("div");
-      typingDiv.className = "chat-msg ai-msg typing-indicator";
-      typingDiv.id = "ai-typing";
-      typingDiv.innerHTML = `<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span> <span style="font-size:12px; margin-left:5px;">AI-gu waa uu qorayaa...</span>`;
-      chatBox.appendChild(typingDiv);
+      const queryUpper = query.toUpperCase();
+
+      // DETECTION FOR DYNAMIC COMPANY ACCOUNTS (INCLUDING COOPAY & KAAFI)
+      let matchedCompany = null;
+      if (queryUpper.includes("COOPAY") || queryUpper.includes("COOP")) matchedCompany = "COOPAY EBIRR";
+      else if (queryUpper.includes("KAAFI")) matchedCompany = "KAAFI EBIRR";
+      else if (queryUpper.includes("TELEBIRR")) matchedCompany = "TELEBIRR";
+      else if (queryUpper.includes("CBE") || queryUpper.includes("COMMERCIAL")) matchedCompany = "CBE";
+      else if (queryUpper.includes("AWASH")) matchedCompany = "AWASH";
+      else if (queryUpper.includes("EVC")) matchedCompany = "EVC PLUS";
+      else if (queryUpper.includes("ZAAD")) matchedCompany = "ZAAD";
+      else if (queryUpper.includes("SAHAL")) matchedCompany = "SAHAL";
+      else if (queryUpper.includes("EDAHAB")) matchedCompany = "EDAHAB";
+      else if (queryUpper.includes("PREMIER") || queryUpper.includes("SALAAM")) matchedCompany = "PREMIER BANK";
+      else if (queryUpper.includes("BINANCE")) matchedCompany = "BINANCE";
+      else if (queryUpper.includes("PYYPL")) matchedCompany = "PYYPL";
+      else if (queryUpper.includes("PERFECT")) matchedCompany = "PERFECT MONEY";
+
+      if (matchedCompany) {
+        const accountDetails = COMPANY_ACCOUNTS[matchedCompany] || "Fadlan maamulaha kala xidhiidh akoonka.";
+        const fileInputId = "chatReceiptFile_" + Date.now();
+        const fileNameDisplayId = "fileNameDisplay_" + Date.now();
+
+        const aiResponse = `Fadlan lacagta ku soo dir Akoonka **${matchedCompany}**:
+        \n📌 **${accountDetails}**
+        \nSidoo kale, marka aad lacagta soo dirtid, fadlan hoos uga **Upload sawirka rasiidka (Gallery-ga)** iyo **Number-ka/Akoonka** lagugu soo celinayo lacagta si loo farsameeyo! 👇`;
+
+        chatBox.innerHTML += `<div class="chat-msg ai-msg">${aiResponse}
+          <div class="upload-card-chat">
+            <label style="font-size:12px; color:var(--accent); font-weight:bold;">📷 Soo Upload-gareey Sawirka Rasiidka (Gallery):</label>
+            <input type="file" id="${fileInputId}" accept="image/*" style="display:none;" onchange="updateFileNameDisplay(this, '${fileNameDisplayId}')">
+            <label for="${fileInputId}" class="file-upload-btn">🖼️ Ka soo dooro Gallery-ga Sawirka</label>
+            <div id="${fileNameDisplayId}" style="font-size:11px; color:var(--success); margin-top:4px;"></div>
+
+            <label style="font-size:12px; color:var(--accent); margin-top:10px; display:block; font-weight:bold;">📞 Number-ka / Account-ka lacagta lagugu soo celinayo:</label>
+            <input type="text" id="chatRefundNumber" placeholder="e.g. 061xxxxxxx / Binance ID" style="margin-top:5px; padding:8px;">
+            <button onclick="submitReceiptToAdmin('${matchedCompany}', '${fileInputId}')" class="btn-action" style="background:var(--success); padding:10px; margin-top:10px; font-size:13px;">🚀 Dir Rasiidka</button>
+          </div>
+        </div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return;
+      }
+
+      // STANDARD GEMINI API REQUEST
+      const loadingId = "loading-" + Date.now();
+      chatBox.innerHTML += `<div class="chat-msg ai-msg" id="${loadingId}">⏳ Gemini AI waa uu fekerayaa...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      setTimeout(() => {
-        const typingElem = document.getElementById("ai-typing");
-        if(typingElem) typingElem.remove();
-        
-        let reply = "Waan ka xumahay, ma fahmin su'aashaada. Waxaad i weydiin kartaa qiimaha sarifka, xisaabinta lacagta, ama akoonnada bangiyada!";
-        const query = text.toLowerCase();
+      try {
+        const systemPrompt = `Waxaad tahay Caawiyaha Caqliga badan ee Gemini AI ee App-ka "Sarifle App".
+        Qiimaha sarifka USD maanta uu app-ka bixiyo waa:
+        - WE BUY: ${currentBuyRate}
+        - WE SELL: ${currentSellRate}
+        Akoonnada la heli karo waa Coopay-Ebirr, Kaafi Ebirr, Telebirr, CBE, Awash, EVC Plus, Zaad, Sahal, eDahab, Premier Bank, Binance, Pyypl, Perfect Money.
+        Marka uu macmiilku rabo sarif, weydii shirkadda ama bank-ga uu isticmaalayo! Kaga jawaab af-Somali ah oo caqli badan.`;
 
-        if (query.includes("buy") || query.includes("iibi") || query.includes("we buy")) {
-          reply = `📥 Qiimaha aan ku BUY-garaynayno maanta waa: 1 USD = ${currentBuyRate} ETB.`;
-        } else if (query.includes("sell") || query.includes("iibso") || query.includes("we sell")) {
-          reply = `📤 Qiimaha aan ku SELL-garaynayno maanta waa: 1 USD = ${currentSellRate} ETB.`;
-        } else if (query.includes("bangiga") || query.includes("account") || query.includes("akoon") || query.includes("cbe") || query.includes("telebirr")) {
-          reply = `💳 Akoonnada Bangiga:\n• CBE: 1000123456789 (Sarifle Express)\n• Telebirr: +251915145197\n• Binance ID: 88721342`;
-        } else if (query.includes("xisaabi") || query.includes("dollar") || query.includes("$") || !isNaN(parseFloat(query))) {
-          const num = parseFloat(query.match(/\d+/));
-          if(num) {
-            const buyVal = (num * currentBuyRate).toLocaleString();
-            const sellVal = (num * currentSellRate).toLocaleString();
-            reply = `🧮 Xisaabinta $${num} USD:\n• Haddad naga iibinayso (BUY): ${buyVal} ETB\n• Haddad naga iibsanayso (SELL): ${sellVal} ETB`;
-          }
-        }
-
-        // Save AI Response to Cloud DB
-        db.ref("ai_chats/" + currentUser.phone).push({
-          sender: "ai", text: reply, timestamp: Date.now()
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: `${systemPrompt}\n\nSu'aasha Macmiilka: ${query}` }]
+              }
+            ]
+          })
         });
 
-      }, 1200);
+        const data = await response.json();
+        const loadingEl = document.getElementById(loadingId);
+
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          loadingEl.innerText = data.candidates[0].content.parts[0].text;
+        } else {
+          loadingEl.innerText = `💡 Fadlan sheeg shirkada aad rabtid inaad lacagta ku soo dirtid (e.g. Coopay Ebirr, Kaafi Ebirr, Telebirr, EVC Plus, Zaad, Binance) si aan kuugu soo diro number-ka akoonka!`;
+        }
+      } catch (err) {
+        console.error(err);
+        const loadingEl = document.getElementById(loadingId);
+        loadingEl.innerText = `💡 Qiimaha maanta ee Sarifle App: BUY: ${currentBuyRate} | SELL: ${currentSellRate}. Fadlan qor shirkadda aad rabtid si aad akoonka u hesho.`;
+      }
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function updateFileNameDisplay(input, displayId) {
+      if (input.files && input.files[0]) {
+        document.getElementById(displayId).innerText = "✅ Sawirka la doortay: " + input.files[0].name;
+      }
+    }
+
+    // FUNCTION TO UPLOAD RECEIPT FROM GALLERY AND SUBMIT TO FIREBASE FOR ADMIN
+    function submitReceiptToAdmin(company, fileInputId) {
+      const fileInput = document.getElementById(fileInputId);
+      const refundNumber = document.getElementById("chatRefundNumber").value.trim();
+
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0) return alert("⚠️ Fadlan ka soo dooro sawirka rasiidka Gallery-ga!");
+      if (!refundNumber) return alert("⚠️ Fadlan geli number-ka/akoonka lacagta lagugu soo celinayo!");
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const base64Image = e.target.result;
+
+        const proofData = {
+          userName: currentUser ? currentUser.fullName : "Anonym",
+          userPhone: currentUser ? currentUser.phone : "N/A",
+          company: company,
+          refundNumber: refundNumber,
+          receiptImg: base64Image,
+          timestamp: Date.now()
+        };
+
+        db.ref("ai_proofs").push(proofData).then(() => {
+          alert("✨ Rasiidkaaga si guul leh ayaa loo diray! Maamulaha ayaa eegi doona oo lacagta kuugu soo shobi doona!");
+          const chatBox = document.getElementById("chat-box");
+          chatBox.innerHTML += `<div class="chat-msg ai-msg">✅ Waa la helay rasiidkaaga iyo number-ka labadaba! Maamulaha ayaa hadda eegaya. Waad mahadsan tahay! 🙏</div>`;
+          chatBox.scrollTop = chatBox.scrollHeight;
+        });
+      };
+
+      reader.readAsDataURL(file);
     }
   </script>
 </body>
