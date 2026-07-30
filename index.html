@@ -238,7 +238,7 @@
   <div class="app-layout">
     <div id="sidebar">
       <button class="nav-btn active" id="btn-sarifka" onclick="showSection('sarifka')">💼 Akoonkayga Sarifka</button>
-      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">📈 Live Market & Gemini AI</button>
+      <button class="nav-btn" id="btn-customer-portal" onclick="showSection('customer-portal')">📈 Live Market & sarifle AI</button>
       <button class="nav-btn" id="btn-settings" onclick="showSection('settings')">⚙️ Amniga & Settings</button>
       <button class="nav-btn" id="btn-admin-panel" onclick="showSection('admin-panel')" style="display:none; background: var(--admin-color); color: white; margin-top: 15px;">👑 Super Admin Panel</button>
     </div>
@@ -295,7 +295,7 @@
 
       <!-- SECTION 2: LIVE MARKET & AI -->
       <div id="sec-customer-portal" style="display: none;">
-        <h2>📈 Live Market & Super-Smart Gemini AI</h2>
+        <h2>📈 Live Market & Super-Smart sarifle AI</h2>
         <div class="rate-box-grid">
           <div class="rate-card" style="border-top: 4px solid var(--success);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -304,11 +304,11 @@
             </div>
             <div style="margin-top: 12px;">
               <span style="font-size: 13px; color: var(--text-muted);">$1 USD =</span>
-              <div class="rate-val" id="live-buy-display">184.08 <small style="font-size:13px; color:var(--text-muted);">ETB</small></div>
+              <div class="rate-val" id="live-buy-display">180 <small style="font-size:13px; color:var(--text-muted);">ETB</small></div>
             </div>
             <div style="margin-top: 12px; background: rgba(16, 185, 129, 0.1); padding: 12px; border-radius: 10px; border: 1px dashed var(--success);">
               <div style="font-size: 12px; color: var(--success); font-weight: bold;">💵 Qiimaha $100 USD:</div>
-              <div id="buy-100-display" style="font-size: 26px; font-weight: bold; color: #10b981;">18,408 ETB</div>
+              <div id="buy-100-display" style="font-size: 26px; font-weight: bold; color: #10b981;"> ETB</div>
             </div>
           </div>
 
@@ -319,11 +319,11 @@
             </div>
             <div style="margin-top: 12px;">
               <span style="font-size: 13px; color: var(--text-muted);">$1 USD =</span>
-              <div class="rate-val" id="live-sell-display">184.97 <small style="font-size:13px; color:var(--text-muted);">ETB</small></div>
+              <div class="rate-val" id="live-sell-display">181.97 <small style="font-size:13px; color:var(--text-muted);">ETB</small></div>
             </div>
             <div style="margin-top: 12px; background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 10px; border: 1px dashed var(--danger);">
               <div style="font-size: 12px; color: var(--danger); font-weight: bold;">💵 Qiimaha $100 USD:</div>
-              <div id="sell-100-display" style="font-size: 26px; font-weight: bold; color: #ef4444;">18,497 ETB</div>
+              <div id="sell-100-display" style="font-size: 26px; font-weight: bold; color: #ef4444;">18,297 ETB</div>
             </div>
           </div>
         </div>
@@ -1284,7 +1284,7 @@
                 </div>
                 <div class="mt-4 bg-emerald-950/40 light:bg-emerald-100 p-3 rounded-lg border border-emerald-500/20">
                     <p class="text-xs text-emerald-400 light:text-emerald-800 font-medium">Qiimaha $100 USD:</p>
-                    <p class="text-xl font-bold text-emerald-400 light:text-emerald-700" id="buy-100-display">18,348.00 ETB</p>
+                    <p class="text-xl font-bold text-emerald-400 light:text-emerald-700" id="buy-100-display">18,148.00 ETB</p>
                 </div>
             </div>
 
@@ -1298,7 +1298,7 @@
                 </div>
                 <div class="mt-4 bg-rose-950/40 light:bg-rose-100 p-3 rounded-lg border border-rose-500/20">
                     <p class="text-xs text-rose-400 light:text-rose-800 font-medium">Qiimaha $100 USD:</p>
-                    <p class="text-xl font-bold text-rose-400 light:text-rose-700" id="sell-100-display">18,444.00 ETB</p>
+                    <p class="text-xl font-bold text-rose-400 light:text-rose-700" id="sell-100-display">18,244.00 ETB</p>
                 </div>
             </div>
         </div>
@@ -1407,8 +1407,8 @@
         }
 
         // Initial Rates & Setup
-        let baseBuy = 183.48;
-        let baseSell = 184.44;
+        let baseBuy = 181.48;
+        let baseSell = 182.44;
         let currentBuyRate = baseBuy;
         let currentSellRate = baseSell;
 
